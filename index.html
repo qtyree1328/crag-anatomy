@@ -933,6 +933,57 @@
             cameras: {
                 default: { eye: [0, 0, 0.4], target: [0, 0, 0] }
             }
+        },
+        
+        // === LOWER BODY MODELS ===
+        
+        // Gluteus Maximus
+        gluteus_maximus: {
+            uid: '537556cb8be54bf58d1defa95b8958aa',
+            name: 'Gluteus Maximus',
+            credit: 'Anatomary',
+            cameras: {
+                default: { eye: [-0.3, 0.2, 0.5], target: [0, 0, 0] },
+                lateral: { eye: [0.5, 0, 0.3], target: [0, 0, 0] }
+            }
+        },
+        
+        // Gluteus Medius
+        gluteus_medius: {
+            uid: '17f9fd854c5342dd9ecd59ff9466af42',
+            name: 'Gluteus Medius',
+            credit: 'Anatomary',
+            cameras: {
+                default: { eye: [0.4, 0.2, 0.4], target: [0, 0, 0] }
+            }
+        },
+        
+        // Leg muscles
+        leg_anatomy: {
+            uid: 'da71907c71f64bfa86914744badda85f',
+            name: 'Anatomy of the Leg',
+            credit: 'conoreile',
+            cameras: {
+                default: { eye: [0.5, 0, 0.5], target: [0, 0, 0] },
+                anterior: { eye: [0, 0, 0.6], target: [0, 0, 0] },
+                posterior: { eye: [0, 0, -0.6], target: [0, 0, 0] },
+                calf: { eye: [0, -0.3, 0.5], target: [0, -0.3, 0] },
+                thigh: { eye: [0, 0.2, 0.5], target: [0, 0.2, 0] }
+            }
+        },
+        
+        // Leg with muscles
+        leg_muscles: {
+            uid: 'cc3585e0154a4060bebfb414dbcd7514',
+            name: 'Leg With Muscles',
+            credit: 'Gaia Tech',
+            cameras: {
+                default: { eye: [0.5, 0, 0.5], target: [0, 0, 0] },
+                quadriceps: { eye: [0, 0, 0.5], target: [0, 0.2, 0] },
+                hamstrings: { eye: [0, 0, -0.5], target: [0, 0.2, 0] },
+                adductors: { eye: [0.4, 0, 0.3], target: [0, 0.1, 0] },
+                calf: { eye: [0, -0.2, 0.4], target: [0, -0.2, 0] }
+            }
         }
     };
 
@@ -985,7 +1036,34 @@
         // Arteries
         axillary_artery: { model: 'shoulder_arm', camera: 'default' },
         brachial_artery: { model: 'shoulder_arm', camera: 'biceps' },
-        radial_ulnar_arteries: { model: 'hand_forearm', camera: 'default' }
+        radial_ulnar_arteries: { model: 'hand_forearm', camera: 'default' },
+        
+        // === LOWER BODY ===
+        // Hip & Gluteal
+        glute_max: { model: 'gluteus_maximus', camera: 'default' },
+        glute_med: { model: 'gluteus_medius', camera: 'default' },
+        glute_min: { model: 'gluteus_medius', camera: 'default' },
+        piriformis: { model: 'gluteus_maximus', camera: 'lateral' },
+        deep_rotators: { model: 'gluteus_maximus', camera: 'lateral' },
+        iliopsoas: { model: 'leg_muscles', camera: 'default' },
+        
+        // Thigh
+        quadriceps: { model: 'leg_muscles', camera: 'quadriceps' },
+        sartorius: { model: 'leg_muscles', camera: 'quadriceps' },
+        adductors: { model: 'leg_muscles', camera: 'adductors' },
+        hamstrings: { model: 'leg_muscles', camera: 'hamstrings' },
+        
+        // Leg & Ankle
+        tibialis_anterior: { model: 'leg_anatomy', camera: 'anterior' },
+        fibularis: { model: 'leg_anatomy', camera: 'anterior' },
+        triceps_surae: { model: 'leg_muscles', camera: 'calf' },
+        tibialis_posterior: { model: 'leg_anatomy', camera: 'posterior' },
+        fhl: { model: 'leg_anatomy', camera: 'posterior' },
+        
+        // Foot
+        plantar_fascia: { model: 'leg_anatomy', camera: 'calf' },
+        intrinsic_foot_1: { model: 'leg_anatomy', camera: 'calf' },
+        intrinsic_foot_deep: { model: 'leg_anatomy', camera: 'calf' }
     };
 
     // 2D Image fallbacks
@@ -1002,7 +1080,18 @@
         musculocutaneous: 'https://teachmeanatomy.info/wp-content/uploads/2012/04/Musculocutaneous-Nerve-Derivation-from-the-Brachial-Plexus-1024x768.jpg',
         arteries_overview: 'https://teachmeanatomy.info/wp-content/uploads/Overview-of-Arterial-Supply-to-the-Upper-Limbs-1024x944.png',
         axillary_artery: 'https://teachmeanatomy.info/wp-content/uploads/Parts-and-Branches-of-the-Axillary-Artery-1024x520.png',
-        brachial_artery: 'https://teachmeanatomy.info/wp-content/uploads/Anatomical-Course-and-Branches-of-the-Brachial-Artery-1024x614.jpg'
+        brachial_artery: 'https://teachmeanatomy.info/wp-content/uploads/Anatomical-Course-and-Branches-of-the-Brachial-Artery-1024x614.jpg',
+        
+        // Lower Body Images
+        gluteal: 'https://teachmeanatomy.info/wp-content/uploads/The-Gluteal-Muscles-Gluteus-Maximus-Medius-and-Minimus-1024x555.jpg',
+        hip_rotators: 'https://teachmeanatomy.info/wp-content/uploads/The-Short-Lateral-Rotators-of-the-Hip-Joint.jpg',
+        quadriceps: 'https://teachmeanatomy.info/wp-content/uploads/The-Muscles-of-the-Anterior-Thigh-Quadriceps-857x1024.jpg',
+        adductors: 'https://teachmeanatomy.info/wp-content/uploads/The-Muscles-of-the-Medial-Thigh-Adductors.jpg',
+        hamstrings: 'https://teachmeanatomy.info/wp-content/uploads/The-Muscles-of-the-Posterior-Thigh-Hamstrings.jpg',
+        anterior_leg: 'https://teachmeanatomy.info/wp-content/uploads/Muscles-of-the-Anterior-Leg.jpg',
+        lateral_leg: 'https://teachmeanatomy.info/wp-content/uploads/Muscles-of-the-Lateral-Leg-Fibularis-Longus-and-Brevis.jpg',
+        posterior_leg: 'https://teachmeanatomy.info/wp-content/uploads/Muscles-of-the-Posterior-Leg-Superficial-and-Deep.jpg',
+        plantar_foot: 'https://teachmeanatomy.info/wp-content/uploads/Muscles-of-the-Foot-Plantar-Layers-1-and-2.jpg'
     };
 
     // ============================================
@@ -1303,6 +1392,238 @@
             climbingCue: 'Pay attention to <strong>radial artery at the wrist</strong>. Palpate for pulse at snuffbox.',
             climbingDetail: 'Allen\'s test checks both arteries. Ulnar artery usually dominant.',
             clinical: 'Allen\'s test before radial catheterization. Hypothenar hammer syndrome from repetitive trauma.'
+        },
+        
+        // ============================================
+        // LOWER BODY - HIP & GLUTEAL REGION
+        // ============================================
+        {
+            id: 'glute_max', name: 'Gluteus Maximus', latin: 'Musculus gluteus maximus', type: 'muscle',
+            region: 'Hip (Gluteal)', image: IMAGES.gluteal, credit: 'TeachMeAnatomy',
+            origin: 'Posterior gluteal line of ilium, sacrum, coccyx, sacrotuberous ligament, thoracolumbar fascia',
+            insertion: 'IT band (upper 3/4), gluteal tuberosity of femur (lower 1/4)',
+            nerve: 'Inferior gluteal nerve (L5, S1, S2) — exits BELOW piriformis',
+            artery: 'Superior and inferior gluteal arteries',
+            actions: 'Hip extension (most powerful), lateral rotation, abduction (upper fibers)',
+            climbingCue: 'Pay attention to <strong>glute max on high steps and heel hooks</strong>. It extends the hip from deep flexion. Fire it when topping out.',
+            climbingDetail: 'Powerhouse for high steps and topping out. Drives hip extension during heel hooks. Links to contralateral lat via posterior oblique sling.',
+            clinical: 'Inferior gluteal nerve injury → difficulty rising from seated, "lurching" gait. NOT Trendelenburg (that\'s superior gluteal).'
+        },
+        {
+            id: 'glute_med', name: 'Gluteus Medius', latin: 'Musculus gluteus medius', type: 'muscle',
+            region: 'Hip (Gluteal)', image: IMAGES.gluteal, credit: 'TeachMeAnatomy',
+            origin: 'External ilium between anterior and posterior gluteal lines',
+            insertion: 'Lateral surface of greater trochanter',
+            nerve: 'Superior gluteal nerve (L4, L5, S1) — ONLY nerve ABOVE piriformis',
+            artery: 'Superior gluteal artery',
+            actions: 'Hip abduction (primary), anterior fibers: medial rotation, posterior fibers: lateral rotation',
+            climbingCue: 'Pay attention to <strong>glute med when flagging</strong>. On single-leg stance, it prevents pelvic drop. Essential for drop-knees.',
+            climbingDetail: 'Key for flagging — stabilizes pelvis during single-leg stance. Critical for drop-knees (hip abduction + internal rotation).',
+            clinical: 'Superior gluteal nerve injury → positive Trendelenburg sign (contralateral pelvic drop). Safe injection: upper outer quadrant.'
+        },
+        {
+            id: 'glute_min', name: 'Gluteus Minimus', latin: 'Musculus gluteus minimus', type: 'muscle',
+            region: 'Hip (Gluteal)', image: IMAGES.gluteal, credit: 'TeachMeAnatomy',
+            origin: 'External ilium between anterior and inferior gluteal lines',
+            insertion: 'Anterior surface of greater trochanter',
+            nerve: 'Superior gluteal nerve (L4, L5, S1)',
+            artery: 'Superior gluteal artery (deep branch)',
+            actions: 'Hip abduction, medial (internal) rotation (strongest internal rotator)',
+            climbingCue: 'Pay attention to <strong>glute min during drop-knees</strong>. Internal rotation + abduction = perfect drop-knee position.',
+            climbingDetail: 'Works with glute med for pelvis stability. Its internal rotation is key for drop-knees. "Rotator cuff of the hip."',
+            clinical: 'Greater trochanteric pain syndrome often involves glute min tendinopathy, not just bursitis.'
+        },
+        {
+            id: 'piriformis', name: 'Piriformis', latin: 'Musculus piriformis', type: 'muscle',
+            region: 'Hip (Deep)', image: IMAGES.hip_rotators, credit: 'TeachMeAnatomy',
+            origin: 'Anterior surface of sacrum (S2-S4), sacrotuberous ligament',
+            insertion: 'Superior border of greater trochanter',
+            nerve: 'Direct branches from sacral plexus (S1, S2)',
+            artery: 'Superior and inferior gluteal arteries',
+            actions: 'Lateral rotation (hip extended), abduction (hip flexed), hip stabilization',
+            climbingCue: 'Pay attention to <strong>piriformis in frog position and stemming</strong>. External rotation with knees out. Commonly tight in climbers.',
+            climbingDetail: 'Deeply engaged in frog position, stemming, and externally rotated heel hooks. Stretching is critical for climbers.',
+            clinical: 'KEY landmark: divides greater sciatic foramen. ABOVE: superior gluteal n/a. BELOW: sciatic, inferior gluteal, pudendal. Piriformis syndrome = sciatic compression.'
+        },
+        {
+            id: 'deep_rotators', name: 'Deep Lateral Rotators', latin: 'Obturator internus, Gemelli, Quadratus femoris', type: 'muscle',
+            region: 'Hip (Deep)', image: IMAGES.hip_rotators, credit: 'TeachMeAnatomy',
+            origin: 'Obturator int: obturator membrane. Gemelli: ischial spine/tuberosity. Quadratus femoris: ischial tuberosity.',
+            insertion: 'Greater trochanter (trochanteric fossa) and intertrochanteric crest',
+            nerve: 'Nerve to obturator internus (L5,S1,S2), Nerve to quadratus femoris (L4,L5,S1)',
+            artery: 'Inferior gluteal artery, medial circumflex femoral artery',
+            actions: 'Lateral rotation, hip stabilization. Quadratus femoris also adducts.',
+            climbingCue: 'Pay attention to <strong>deep rotators for precision hip control</strong>. Fine motor control during technical footwork.',
+            climbingDetail: 'Precision controllers of hip rotation. Fire during stemming, drop-knees (eccentrically), and stable hip positioning.',
+            clinical: 'Medial circumflex femoral artery (femoral head blood supply) passes between inferior gemellus and quadratus femoris — damage → AVN.'
+        },
+        {
+            id: 'iliopsoas', name: 'Iliopsoas', latin: 'Iliacus + Psoas Major', type: 'muscle',
+            region: 'Hip (Flexor)', image: IMAGES.quadriceps, credit: 'TeachMeAnatomy',
+            origin: 'Psoas: T12-L5 vertebrae. Iliacus: iliac fossa.',
+            insertion: 'Lesser trochanter of femur (common tendon)',
+            nerve: 'Psoas: lumbar plexus (L1,L2,L3). Iliacus: femoral nerve (L2,L3,L4).',
+            artery: 'Lumbar arteries, iliolumbar artery',
+            actions: 'Hip flexion (most powerful hip flexor). Psoas also laterally flexes lumbar spine.',
+            climbingCue: 'Pay attention to <strong>iliopsoas on every high step</strong>. The engine lifting your knee. Also stabilizes hip in knee bars.',
+            climbingDetail: 'Powers every high step. Essential for steep climbing where feet must reach hands. Only muscle connecting spine to lower limb.',
+            clinical: 'Lumbar plexus forms WITHIN psoas. Psoas abscess (TB) tracks to groin. Psoas sign (pain on hip extension) = appendicitis.'
+        },
+        
+        // ============================================
+        // LOWER BODY - THIGH
+        // ============================================
+        {
+            id: 'quadriceps', name: 'Quadriceps Femoris', latin: 'Rectus femoris, Vasti', type: 'muscle',
+            region: 'Thigh (Anterior)', image: IMAGES.quadriceps, credit: 'TeachMeAnatomy',
+            origin: 'Rectus: AIIS. Vasti: femur (various surfaces). All four heads.',
+            insertion: 'Tibial tuberosity via patellar ligament (patella is sesamoid)',
+            nerve: 'Femoral nerve (L2, L3, L4)',
+            artery: 'Femoral artery, lateral circumflex femoral artery',
+            actions: 'Knee extension (ONLY knee extensor). Rectus femoris also flexes hip.',
+            climbingCue: 'Pay attention to <strong>quadriceps when pushing off footholds</strong>. Every time you stand up on a step. Critical for slab and stemming.',
+            climbingDetail: 'Extends knee against body weight on every step. Eccentric control during descents. VMO critical for patellar tracking.',
+            clinical: 'Femoral nerve injury → can\'t extend knee, lost patellar reflex. Osgood-Schlatter (tibial tuberosity traction apophysitis in adolescents).'
+        },
+        {
+            id: 'sartorius', name: 'Sartorius', latin: 'Musculus sartorius', type: 'muscle',
+            region: 'Thigh (Anterior)', image: IMAGES.quadriceps, credit: 'TeachMeAnatomy',
+            origin: 'Anterior superior iliac spine (ASIS)',
+            insertion: 'Medial tibial surface (pes anserinus)',
+            nerve: 'Femoral nerve (L2, L3)',
+            artery: 'Femoral artery',
+            actions: 'Hip flexion, abduction, lateral rotation. Knee flexion, medial rotation.',
+            climbingCue: 'Pay attention to <strong>sartorius for high, externally rotated foot placements</strong>. "Tailor\'s muscle" for cross-legged position.',
+            climbingDetail: 'Longest muscle. Combined hip flex/abduct/external rotate = high side-pull foot placement. Frog position.',
+            clinical: 'Forms lateral border of femoral triangle. Pes anserinus = Sartorius + Gracilis + Semitendinosus (SGT). Anserine bursitis.'
+        },
+        {
+            id: 'adductors', name: 'Adductor Group', latin: 'Longus, Brevis, Magnus, Pectineus, Gracilis', type: 'muscle',
+            region: 'Thigh (Medial)', image: IMAGES.adductors, credit: 'TeachMeAnatomy',
+            origin: 'Pubis and ischium (various parts)',
+            insertion: 'Linea aspera of femur. Gracilis: pes anserinus. Magnus hamstring part: adductor tubercle.',
+            nerve: 'Obturator nerve (L2,L3,L4). Exceptions: pectineus also femoral; hamstring part of magnus by sciatic.',
+            artery: 'Obturator artery, profunda femoris (perforating branches)',
+            actions: 'Hip adduction. Pectineus: flexion. Gracilis: knee flexion. Magnus hamstring part: hip extension.',
+            climbingCue: 'Pay attention to <strong>adductors during stemming and wide stances</strong>. Control the split eccentrically. Magnus helps hip extension.',
+            climbingDetail: 'Heavily recruited in stemming (eccentrically controlling split). Adductor strain common from dynamic wide placements.',
+            clinical: 'Obturator nerve through obturator canal. Adductor hiatus = where femoral vessels become popliteal. "Sports hernia" = adductor/rectus junction.'
+        },
+        {
+            id: 'hamstrings', name: 'Hamstrings', latin: 'Biceps femoris, Semitendinosus, Semimembranosus', type: 'muscle',
+            region: 'Thigh (Posterior)', image: IMAGES.hamstrings, credit: 'TeachMeAnatomy',
+            origin: 'Ischial tuberosity (except short head biceps: linea aspera)',
+            insertion: 'Biceps: fibular head. Semitendinosus: pes anserinus. Semimembranosus: medial tibial condyle.',
+            nerve: 'Tibial division of sciatic (L5,S1,S2). Short head biceps: common fibular division.',
+            artery: 'Perforating branches of profunda femoris, inferior gluteal',
+            actions: 'Hip extension, knee flexion. Medial hamstrings: medial knee rotation. Biceps: lateral rotation.',
+            climbingCue: 'Pay attention to <strong>hamstrings during heel hooks</strong>. Combined hip extension + knee flexion = heel hook power. Also high step assistance.',
+            climbingDetail: 'Primary heel hook muscles. Combined hip extension + knee flexion. Tight hamstrings limit high steps with extended knee.',
+            clinical: 'Sciatic nerve largest in body. Short head biceps = common fibular division (more vulnerable in posterior dislocation). Ischial tuberosity avulsion in adolescents.'
+        },
+        
+        // ============================================
+        // LOWER BODY - LEG & ANKLE
+        // ============================================
+        {
+            id: 'tibialis_anterior', name: 'Tibialis Anterior', latin: 'Musculus tibialis anterior', type: 'muscle',
+            region: 'Leg (Anterior)', image: IMAGES.anterior_leg, credit: 'TeachMeAnatomy',
+            origin: 'Lateral tibial condyle, proximal 2/3 lateral tibia, interosseous membrane',
+            insertion: 'Medial cuneiform and base of 1st metatarsal',
+            nerve: 'Deep fibular (peroneal) nerve (L4, L5)',
+            artery: 'Anterior tibial artery',
+            actions: 'Ankle dorsiflexion (primary dorsiflexor), foot inversion',
+            climbingCue: 'Pay attention to <strong>tibialis anterior when placing toes on footholds</strong>. Pulls toes up. Essential for precise edging.',
+            climbingDetail: 'Every precise edge placement uses tibialis anterior. Controls ankle position during smearing. Inside-edge footwork.',
+            clinical: 'Deep fibular nerve injury → foot drop, steppage gait, 1st web space numbness. Anterior compartment syndrome = surgical emergency.'
+        },
+        {
+            id: 'fibularis', name: 'Fibularis Longus & Brevis', latin: 'Musculi fibulares', type: 'muscle',
+            region: 'Leg (Lateral)', image: IMAGES.lateral_leg, credit: 'TeachMeAnatomy',
+            origin: 'Longus: fibular head, proximal 2/3 fibula. Brevis: distal 2/3 fibula.',
+            insertion: 'Longus: 1st MT + medial cuneiform (crosses sole). Brevis: 5th MT tuberosity.',
+            nerve: 'Superficial fibular (peroneal) nerve (L5, S1, S2)',
+            artery: 'Fibular (peroneal) artery',
+            actions: 'Foot eversion (primary evertors), assist plantarflexion. Longus supports transverse arch.',
+            climbingCue: 'Pay attention to <strong>fibularis for outside-edge footwork</strong>. Eversion for backsteps and drop-knees. Lateral ankle stability.',
+            climbingDetail: 'Critical for outside-edge footwork and backsteps. Longus + tibialis anterior form a "stirrup" supporting the foot.',
+            clinical: 'Common fibular nerve wraps around fibular neck — most commonly injured lower limb nerve. Ankle sprains tear ATFL first.'
+        },
+        {
+            id: 'triceps_surae', name: 'Triceps Surae', latin: 'Gastrocnemius + Soleus', type: 'muscle',
+            region: 'Leg (Posterior)', image: IMAGES.posterior_leg, credit: 'TeachMeAnatomy',
+            origin: 'Gastrocnemius: femoral condyles. Soleus: fibular head, soleal line of tibia.',
+            insertion: 'Calcaneal tuberosity via Achilles tendon (strongest tendon)',
+            nerve: 'Tibial nerve (S1, S2)',
+            artery: 'Posterior tibial artery, sural arteries',
+            actions: 'Ankle plantarflexion (most powerful lower limb muscles). Gastrocnemius also flexes knee.',
+            climbingCue: 'Pay attention to <strong>calves when standing on small footholds</strong>. Near-isometric plantarflexion throughout climbing. Heel drops for tendon health.',
+            climbingDetail: 'Continuously active in climbing. Soleus is postural; gastrocnemius for dynamic push-off. Calf fatigue limits sustained routes.',
+            clinical: 'Achilles tendon rupture: "pop," Thompson test (squeeze calf, no plantarflexion). Soleal sinuses = DVT site. Ankle jerk = S1,2.'
+        },
+        {
+            id: 'tibialis_posterior', name: 'Tibialis Posterior', latin: 'Musculus tibialis posterior', type: 'muscle',
+            region: 'Leg (Deep Posterior)', image: IMAGES.posterior_leg, credit: 'TeachMeAnatomy',
+            origin: 'Posterior interosseous membrane, adjacent tibia and fibula',
+            insertion: 'Navicular tuberosity + multiple tarsal/MT insertions',
+            nerve: 'Tibial nerve (L4, L5)',
+            artery: 'Posterior tibial artery',
+            actions: 'Foot inversion (primary invertor), ankle plantarflexion, primary medial arch support',
+            climbingCue: 'Pay attention to <strong>tibialis posterior for inside-edge precision</strong>. Inverts foot and maintains arch under load.',
+            climbingDetail: 'Key for inside-edge footwork. Maintains arch integrity when weighting tiny holds. Forms "stirrup" with fibularis longus.',
+            clinical: 'PTTD (posterior tibial tendon dysfunction) = acquired adult flatfoot. "Too many toes" sign. Tarsal tunnel syndrome.'
+        },
+        {
+            id: 'fhl', name: 'Flexor Hallucis Longus', latin: 'Musculus FHL', type: 'muscle',
+            region: 'Leg (Deep Posterior)', image: IMAGES.posterior_leg, credit: 'TeachMeAnatomy',
+            origin: 'Posterior distal 2/3 fibula, interosseous membrane',
+            insertion: 'Base of distal phalanx of great toe',
+            nerve: 'Tibial nerve (S2, S3)',
+            artery: 'Fibular artery, posterior tibial artery',
+            actions: 'Great toe flexion (IP and MTP), assists plantarflexion, supports medial arch',
+            climbingCue: 'Pay attention to <strong>FHL when gripping footholds with your big toe</strong>. THE toe grip muscle. Standing on tiny edges.',
+            climbingDetail: 'Arguably the most important climbing footwork muscle. Great toe provides majority of foot contact force on small holds.',
+            clinical: 'FHL tendon between talar tubercles — os trigonum can cause impingement. "Dancer\'s tendinitis." Knot of Henry with FDL.'
+        },
+        
+        // ============================================
+        // LOWER BODY - FOOT
+        // ============================================
+        {
+            id: 'plantar_fascia', name: 'Plantar Aponeurosis', latin: 'Aponeurosis plantaris', type: 'other',
+            region: 'Foot (Plantar)', image: IMAGES.plantar_foot, credit: 'TeachMeAnatomy',
+            origin: 'Medial calcaneal tuberosity, blends with Achilles insertion',
+            insertion: 'Plantar plates of MTP joints, digital slips to toes',
+            nerve: 'Medial calcaneal branches (sensory). Mechanoreceptor-rich.',
+            artery: 'Medial and lateral plantar arteries',
+            actions: 'Passive arch support via windlass mechanism. Toe dorsiflexion tightens fascia → elevates arch → rigid lever.',
+            climbingCue: 'Pay attention to <strong>plantar fascia when toes are extended on footholds</strong>. Windlass mechanism creates rigid lever for force transfer.',
+            climbingDetail: 'Critical for transmitting force from calf to rock. Proper climbing shoe fit maintains slight toe dorsiflexion for windlass.',
+            clinical: 'Plantar fasciitis: heel pain, worst first steps AM. NOT inflammation — degenerative enthesopathy. Stretching + eccentric loading.'
+        },
+        {
+            id: 'intrinsic_foot_1', name: 'Intrinsic Muscles Layer 1', latin: 'Abd. hallucis, FDB, Abd. digiti minimi', type: 'muscle',
+            region: 'Foot (Plantar)', image: IMAGES.plantar_foot, credit: 'TeachMeAnatomy',
+            origin: 'All from calcaneal tuberosity and plantar aponeurosis',
+            insertion: 'Abd. hallucis: great toe prox phalanx. FDB: middle phalanges 2-5. Abd. DM: 5th toe.',
+            nerve: 'Medial plantar: abd. hallucis + FDB. Lateral plantar: abd. digiti minimi.',
+            artery: 'Medial and lateral plantar arteries',
+            actions: 'Abductor hallucis: abducts/flexes great toe, supports medial arch. FDB: flexes PIPs. Abd DM: abducts 5th toe.',
+            climbingCue: 'Pay attention to <strong>first layer for arch support and toe grip</strong>. Abductor hallucis key for inside-edge footwork.',
+            climbingDetail: 'Abductor hallucis supports medial arch under load. FDB provides toe grip. Creates "toe clamp" on holds.',
+            clinical: 'Medial plantar nerve = "median of foot" (LAFF muscles). Lateral plantar = "ulnar of foot." Baxter\'s nerve entrapment mimics plantar fasciitis.'
+        },
+        {
+            id: 'intrinsic_foot_deep', name: 'Intrinsic Muscles Deep Layers', latin: 'Lumbricals, Interossei, Adductor hallucis', type: 'muscle',
+            region: 'Foot (Plantar)', image: IMAGES.plantar_foot, credit: 'TeachMeAnatomy',
+            origin: 'Quadratus plantae: calcaneus. Lumbricals: FDL tendons. Add. hallucis: MTs. Interossei: MTs.',
+            insertion: 'Quadratus plantae: FDL tendon. Lumbricals/Interossei: extensor expansions. Add. hallucis: great toe.',
+            nerve: 'Mostly lateral plantar nerve (S1,S2). Lumbrical 1: medial plantar.',
+            artery: 'Plantar arch, plantar metatarsal arteries',
+            actions: 'Lumbricals: flex MTP + extend IP. Interossei: abduct/adduct toes. Adductor hallucis: adducts great toe, maintains transverse arch.',
+            climbingCue: 'Pay attention to <strong>deep intrinsics for fine toe control</strong>. Adductor hallucis prevents metatarsal splaying under load.',
+            climbingDetail: 'Lumbricals maintain optimal toe position (MTP flex + IP extend) on small holds. Interossei provide lateral stability.',
+            clinical: 'Morton\'s neuroma (3rd-4th interspace): shooting toe pain from digital nerve compression. Aggravated by tight climbing shoes.'
         }
     ];
 
