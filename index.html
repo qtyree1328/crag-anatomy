@@ -863,6 +863,38 @@
             climbingDetail: 'Primary mover for abduction past 15°. Origin mirrors trapezius insertion — continuous superficial sheet. Forms force couple with supraspinatus.',
             clinical: 'Surgical neck fractures or anterior dislocations → axillary nerve injury → deltoid paralysis + "regimental badge" anesthesia. Always test sensation before reducing dislocations.'
         },
+        {
+            id: 'teres_minor',
+            name: 'Teres Minor',
+            latin: 'Musculus teres minor',
+            region: 'Shoulder (Rotator Cuff)',
+            image: IMAGES.back,
+            credit: 'TeachMeAnatomy',
+            origin: 'Upper 2/3 of lateral border of scapula (posterior surface)',
+            insertion: 'Inferior facet of greater tubercle of humerus; blends with posterior capsule',
+            nerve: 'Axillary nerve (C5, C6) — branch given off in quadrilateral space',
+            artery: 'Circumflex scapular artery, posterior circumflex humeral artery',
+            actions: 'Lateral (external) rotation of shoulder, weak adduction, posterior stabilization of humeral head',
+            climbingCue: 'Pay attention to <strong>teres minor during gastons and external rotation moves</strong>. Works with infraspinatus to externally rotate. Helps decelerate internal rotation during dynamic catches.',
+            climbingDetail: 'Shares external rotation duty with infraspinatus. Part of quadrilateral space boundary (with teres major, triceps long head, humerus). Smaller but important stabilizer.',
+            clinical: 'Usually spared in rotator cuff tears (supraspinatus tears first). Quadrilateral space syndrome: axillary nerve compression → teres minor weakness + deltoid involvement + lateral shoulder numbness.'
+        },
+        {
+            id: 'teres_major',
+            name: 'Teres Major',
+            latin: 'Musculus teres major',
+            region: 'Shoulder',
+            image: IMAGES.back,
+            credit: 'TeachMeAnatomy',
+            origin: 'Posterior surface of inferior angle of scapula, lower 1/3 lateral border',
+            insertion: 'Medial lip of intertubercular groove (with latissimus dorsi)',
+            nerve: 'Lower subscapular nerve (C5, C6, C7) — posterior cord',
+            artery: 'Circumflex scapular artery, thoracodorsal artery',
+            actions: 'Medial rotation, adduction, and extension of shoulder — "lat\'s little helper"',
+            climbingCue: 'Pay attention to <strong>teres major during pull-downs and lock-offs</strong>. Works synergistically with lat. Feel it in the lower scapular region during powerful adduction.',
+            climbingDetail: 'Called "lat\'s little helper" — same actions, same insertion (medial lip of groove). NOT a rotator cuff muscle despite the name similarity to teres minor. Forms boundary of triangular and quadrilateral spaces.',
+            clinical: 'Rarely injured in isolation. Forms posterior axillary fold with lat. Triangular space (teres major, teres minor, long head triceps) transmits circumflex scapular artery.'
+        },
         // === THE ARM ===
         {
             id: 'biceps',
@@ -912,6 +944,22 @@
             climbingDetail: 'Long head passes between teres major and minor creating quadrilateral space boundaries. Olecranon bursa overlies insertion ("student\'s elbow").',
             clinical: 'Radial nerve + profunda brachii in radial groove. Midshaft humeral fracture → wrist drop, loss of brachioradialis reflex, sensory loss in snuffbox. Triceps usually spared.'
         },
+        {
+            id: 'coracobrachialis',
+            name: 'Coracobrachialis',
+            latin: 'Musculus coracobrachialis',
+            region: 'Arm (Anterior)',
+            image: IMAGES.arm,
+            credit: 'TeachMeAnatomy',
+            origin: 'Apex of coracoid process of scapula (with short head biceps)',
+            insertion: 'Middle 1/3 of medial humeral surface (between triceps and brachialis insertions)',
+            nerve: 'Musculocutaneous nerve (C5, C6, C7) — pierces the muscle belly',
+            artery: 'Brachial artery (muscular branches)',
+            actions: 'Flexion and adduction of shoulder, weak stabilization of humeral head',
+            climbingCue: 'Pay attention to <strong>coracobrachialis when reaching forward and across</strong>. Helps pull arm toward body. Works during compression moves and cross-body reaching.',
+            climbingDetail: 'Key landmark: musculocutaneous nerve pierces it ~5-8cm below coracoid. Short head biceps and coracobrachialis form conjoint tendon. Assists in pulling arm across body for cross-through moves.',
+            clinical: 'Musculocutaneous nerve pierces the muscle — entrapment causes anterior arm weakness and lateral forearm numbness. Conjoint tendon avulsion rare but causes significant weakness.'
+        },
         // === FOREARM ===
         {
             id: 'fdp',
@@ -944,6 +992,70 @@
             climbingCue: 'Pay attention to <strong>FDS on slopers and open-hand grips</strong>. Flexes PIP. Test in isolation: hold other fingers extended, flex one PIP.',
             climbingDetail: 'Crucial for open-hand grips. Median nerve and ulnar artery pass deep to FDS arch entering forearm.',
             clinical: 'FDS splits for FDP (chiasm of Camper). Test: hold all others extended, flex PIP. FDS to 5th digit absent/weak in ~20%.'
+        },
+        {
+            id: 'pronator_teres',
+            name: 'Pronator Teres',
+            latin: 'Musculus pronator teres',
+            region: 'Forearm (Superficial)',
+            image: IMAGES.forearm_superficial,
+            credit: 'TeachMeAnatomy',
+            origin: 'Humeral head: medial epicondyle (common flexor origin). Ulnar head: coronoid process.',
+            insertion: 'Middle of lateral surface of radius (pronator tuberosity)',
+            nerve: 'Median nerve (C6, C7) — passes between the two heads',
+            artery: 'Ulnar artery, anterior ulnar recurrent artery',
+            actions: 'Pronation of forearm, weak elbow flexion',
+            climbingCue: 'Pay attention to <strong>pronator teres when turning palms down on slopers</strong>. Controls forearm rotation. Median nerve passes between its two heads — overuse can cause compression.',
+            climbingDetail: 'Forms medial boundary of cubital fossa. Median nerve passes between humeral and ulnar heads. Works with pronator quadratus for full pronation. Important for sloper orientation.',
+            clinical: 'Pronator syndrome: median nerve compression between the two heads. Presents like carpal tunnel but with forearm pain and weakness of thenar muscles. Resisted pronation reproduces symptoms.'
+        },
+        {
+            id: 'fpl',
+            name: 'Flexor Pollicis Longus',
+            latin: 'Musculus flexor pollicis longus',
+            region: 'Forearm (Deep)',
+            image: IMAGES.forearm,
+            credit: 'TeachMeAnatomy',
+            origin: 'Anterior surface of radius (middle 1/3), adjacent interosseous membrane',
+            insertion: 'Base of distal phalanx of thumb (palmar surface)',
+            nerve: 'Anterior interosseous nerve (C8, T1) — branch of median nerve',
+            artery: 'Anterior interosseous artery',
+            actions: 'Flexion of IP joint of thumb — ONLY muscle that flexes thumb IP. Assists MCP and CMC flexion.',
+            climbingCue: 'Pay attention to <strong>FPL when crimping with thumb wrap</strong>. Powers the thumb curl over index finger in full crimp. Only muscle flexing thumb IP joint.',
+            climbingDetail: 'Unique to humans — enables precision grip. Tendon passes through carpal tunnel in its own synovial sheath. Works with thenar muscles for powerful pinch grip. Critical for thumb-over crimp.',
+            clinical: 'Anterior interosseous syndrome: cannot make "OK" sign (FPL + FDP to index affected). Linburg-Comstock syndrome: anomalous connection between FPL and FDP causing linked thumb-index movement.'
+        },
+        {
+            id: 'brachioradialis',
+            name: 'Brachioradialis',
+            latin: 'Musculus brachioradialis',
+            region: 'Forearm (Lateral)',
+            image: IMAGES.forearm_superficial,
+            credit: 'TeachMeAnatomy',
+            origin: 'Proximal 2/3 of lateral supracondylar ridge of humerus',
+            insertion: 'Lateral surface of distal radius, just proximal to styloid process',
+            nerve: 'Radial nerve (C5, C6) — before it divides into superficial and deep branches',
+            artery: 'Radial recurrent artery',
+            actions: 'Elbow flexion (especially in neutral/mid-pronated position), returns forearm to neutral from full pronation or supination',
+            climbingCue: 'Pay attention to <strong>brachioradialis during neutral-grip lock-offs</strong>. Works hardest when forearm is mid-pronated. Feel the lateral forearm bulk during elbow flexion.',
+            climbingDetail: 'Flexor innervated by radial nerve (posterior cord) — an embryological oddity. Most effective with forearm in neutral. Forms lateral boundary of cubital fossa. Prominent in climbers.',
+            clinical: 'Brachioradialis reflex tests C5-C6 and radial nerve. Radial nerve courses between brachioradialis and brachialis in forearm. Reflex absent in radial nerve or C6 lesions.'
+        },
+        {
+            id: 'extensors',
+            name: 'Wrist & Finger Extensors',
+            latin: 'ECRL, ECRB, ECU, ED, EDM',
+            region: 'Forearm (Posterior)',
+            image: IMAGES.forearm,
+            credit: 'TeachMeAnatomy',
+            origin: 'Lateral epicondyle (common extensor origin) and posterior forearm',
+            insertion: 'ECRL/ECRB: 2nd/3rd MC bases. ECU: 5th MC base. ED: extensor expansions 2-5. EDM: 5th digit expansion.',
+            nerve: 'Posterior interosseous nerve (C7, C8) — deep branch of radial nerve',
+            artery: 'Posterior interosseous artery',
+            actions: 'Extension of wrist (ECRL, ECRB, ECU), extension of MCP joints digits 2-5 (ED, EDM), finger abduction via extensor expansion',
+            climbingCue: 'Pay attention to <strong>extensors when opening hand and setting up for grips</strong>. Balance the powerful flexors. ECRB tendinopathy = lateral epicondylitis ("tennis elbow") common in climbers.',
+            climbingDetail: 'ED tendons connect via juncturae tendinum — can limit independent extension. Extensor expansion receives interossei and lumbricals. Extensors fatigue differently than flexors.',
+            clinical: 'Lateral epicondylitis (tennis elbow): ECRB origin pain, worse with resisted wrist extension. Posterior interosseous syndrome: finger drop without wrist drop (ECRL spared). Saturday night palsy spares extensors proximal to spiral groove.'
         },
         // === HAND ===
         {
@@ -1009,6 +1121,22 @@
             climbingCue: 'Pay attention to <strong>thenar muscles during every pinch grip</strong>. Feel the thenar eminence contract forcefully. Opposition brings thumb pad to finger pads.',
             climbingDetail: 'Essential for every pinch grip. Recurrent branch emerges laterally from median just distal to retinaculum. Form radial wall of carpal tunnel.',
             clinical: 'Recurrent branch laceration destroys opposition — profound disability. "Ape hand" = thenar wasting + loss of opposition. Test: touch thumb tip to 5th finger.'
+        },
+        {
+            id: 'hypothenar',
+            name: 'Hypothenar Muscles',
+            latin: 'Opponens digiti minimi, ADM, FDM',
+            region: 'Hand (Hypothenar)',
+            image: IMAGES.hand,
+            credit: 'Wikimedia Commons',
+            origin: 'Flexor retinaculum, hook of hamate, pisiform bone',
+            insertion: 'Opponens: 5th MC shaft. ADM: medial proximal phalanx base. FDM: proximal phalanx base of 5th digit.',
+            nerve: 'Deep branch of ulnar nerve (C8, T1)',
+            artery: 'Ulnar artery (deep palmar branch)',
+            actions: 'Opposition of 5th digit (opponens), abduction of 5th digit (ADM), flexion of 5th MCP (FDM)',
+            climbingCue: 'Pay attention to <strong>hypothenar muscles during crack climbing and side pulls</strong>. Power the pinky side of grip. Cupping the hand for jams activates these muscles.',
+            climbingDetail: 'Form ulnar border of palm. Work with interossei for small hold precision. Hook of hamate is key landmark — Guyon\'s canal runs alongside it. Active in crack climbing.',
+            clinical: 'Ulnar tunnel syndrome (Guyon\'s canal): ulnar nerve compression at wrist. Cyclists palsy from handlebar pressure. Hook of hamate fractures from direct trauma — pain with gripping.'
         }
     ];
 
