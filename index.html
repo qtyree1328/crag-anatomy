@@ -7,6 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Sketchfab Viewer API -->
+    <script type="text/javascript" src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
     <style>
         :root {
             --bg: #F8F6F3;
@@ -25,6 +27,8 @@
             --sky-soft: #E4EEF4;
             --gold: #C9A227;
             --gold-soft: #FDF6E3;
+            --purple: #9B7BB8;
+            --purple-soft: #F0E8F5;
             --shadow-soft: 0 4px 20px rgba(45, 42, 38, 0.06);
             --radius: 24px;
             --radius-sm: 16px;
@@ -239,6 +243,70 @@
             padding: 0 20px;
         }
 
+        /* 3D Viewer Container */
+        .viewer-3d-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            min-height: 280px;
+        }
+
+        .viewer-3d-container iframe {
+            width: 100%;
+            height: 280px;
+            border: none;
+            border-radius: var(--radius);
+        }
+
+        .viewer-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            border-radius: var(--radius);
+        }
+
+        .viewer-loading.hidden { display: none; }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: var(--coral);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .viewer-badge {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .viewer-badge::before {
+            content: '🔬';
+        }
+
         .anatomy-visual {
             background: linear-gradient(135deg, #f0ede8 0%, #e5e0d8 100%);
             border-radius: var(--radius);
@@ -255,6 +323,36 @@
             max-height: 200px;
             object-fit: contain;
             border-radius: 12px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .view-toggle-btn {
+            flex: 1;
+            padding: 12px;
+            background: var(--surface);
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .view-toggle-btn.active {
+            border-color: var(--coral);
+            color: var(--coral);
+            background: var(--coral-soft);
         }
 
         .cue-card {
@@ -410,6 +508,18 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        .rest-3d-viewer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 300px;
+            position: relative;
+        }
+
+        .rest-3d-viewer iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+
         .rest-visual {
             background: linear-gradient(135deg, #f0ede8 0%, #e5e0d8 100%);
             padding: 20px;
@@ -447,8 +557,24 @@
             font-style: italic;
             color: var(--text-muted);
             font-size: 13px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .type-badge.muscle { background: var(--coral-soft); color: var(--coral); }
+        .type-badge.nerve { background: var(--gold-soft); color: var(--gold); }
+        .type-badge.artery { background: #FDE8E8; color: #C53030; }
+        .type-badge.other { background: var(--purple-soft); color: var(--purple); }
 
         .detail-section { margin-bottom: 16px; }
 
@@ -565,7 +691,7 @@
                 <div class="hero-section">
                     <div class="hero-icon"><img src="https://media.istockphoto.com/id/485407337/photo/human-anatomy-model.jpg?s=612x612&w=0&k=20&c=xDE9nXiNdsniWdtcqHX9yErSUcfBgTMIjX-kODOFiMw=" alt="Anatomy"></div>
                     <h1 class="hero-title">Ready to Climb?</h1>
-                    <p class="hero-subtitle">Learn climbing anatomy during rest periods.</p>
+                    <p class="hero-subtitle">Learn climbing anatomy with interactive 3D models during rest periods.</p>
                 </div>
                 <button class="climb-btn" onclick="app.startClimb()">Start Climb →</button>
                 <div class="next-card">
@@ -586,7 +712,24 @@
                 </div>
             </div>
             <div class="preclimb-scroll">
-                <div class="anatomy-visual"><img id="preclimb-image" src="" alt="Anatomy"></div>
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" id="btn-3d" onclick="app.toggleView('3d')">🔬 3D Model</button>
+                    <button class="view-toggle-btn" id="btn-2d" onclick="app.toggleView('2d')">📷 Image</button>
+                </div>
+                
+                <div class="viewer-3d-container" id="preclimb-3d-container">
+                    <div class="viewer-loading" id="preclimb-loading">
+                        <div class="loading-spinner"></div>
+                        <span>Loading 3D Model...</span>
+                    </div>
+                    <iframe id="preclimb-3d-frame" src="" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+                    <div class="viewer-badge">Interactive 3D</div>
+                </div>
+                
+                <div class="anatomy-visual" id="preclimb-2d-container" style="display: none;">
+                    <img id="preclimb-image" src="" alt="Anatomy">
+                </div>
+                
                 <div class="cue-card">
                     <div class="cue-header">
                         <div class="cue-icon">💡</div>
@@ -621,13 +764,17 @@
                 <div class="rest-timer" id="rest-timer">0:00</div>
             </div>
             <div class="rest-scroll">
-                <div class="rest-visual">
-                    <img id="rest-image" src="" alt="Anatomy">
-                    <div class="image-credit" id="image-credit"></div>
+                <div class="rest-3d-viewer" id="rest-3d-container">
+                    <div class="viewer-loading" id="rest-loading">
+                        <div class="loading-spinner"></div>
+                        <span>Loading 3D Model...</span>
+                    </div>
+                    <iframe id="rest-3d-frame" src="" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
                 </div>
                 <div class="rest-details">
                     <h2 class="rest-title" id="rest-title"></h2>
                     <p class="rest-latin" id="rest-latin"></p>
+                    <span class="type-badge" id="rest-type-badge">Muscle</span>
                     
                     <div class="detail-section">
                         <div class="section-header">
@@ -704,10 +851,145 @@
     </div>
 
     <script>
-    // Comprehensive Anatomy Database from Climber's Study Guide
-    // Real images from TeachMeAnatomy (verified working)
+    // ============================================
+    // 3D MODEL REGISTRY - Sketchfab Models
+    // ============================================
+    const MODELS_3D = {
+        // Upper Limb - SGU Medical Art (professional medical models)
+        shoulder_arm: {
+            uid: '6dd851d018f34892800b83ca418ccb52',
+            name: 'Muscles of the Shoulder, Arm, Forearm',
+            credit: 'SGU Medical Art',
+            // Camera positions for specific structures [eye, target]
+            cameras: {
+                default: { eye: [0.5, 0.3, 0.6], target: [0, 0, 0] },
+                lat: { eye: [-0.4, 0.2, -0.3], target: [0, 0.1, 0] },
+                trapezius: { eye: [-0.3, 0.4, -0.4], target: [0, 0.2, 0] },
+                deltoid: { eye: [0.4, 0.3, 0.3], target: [0.1, 0.2, 0] },
+                biceps: { eye: [0.3, 0, 0.4], target: [0.1, -0.1, 0] },
+                triceps: { eye: [-0.3, 0, 0.4], target: [-0.1, -0.1, 0] },
+                brachialis: { eye: [0.25, -0.1, 0.35], target: [0.1, -0.15, 0] },
+                forearm: { eye: [0.2, -0.3, 0.4], target: [0.1, -0.3, 0] }
+            }
+        },
+        
+        // Hand & Forearm
+        hand_forearm: {
+            uid: '463edeaa8db94bbc975e0dce75dcd795',
+            name: 'Anatomy of the Hand and Forearm',
+            credit: 'SGU Medical Art',
+            cameras: {
+                default: { eye: [0.3, 0, 0.4], target: [0, 0, 0] },
+                thenar: { eye: [0.15, -0.05, 0.2], target: [0.05, -0.05, 0] },
+                hypothenar: { eye: [-0.1, -0.05, 0.2], target: [-0.05, -0.05, 0] },
+                lumbricals: { eye: [0.1, -0.1, 0.15], target: [0, -0.1, 0] },
+                interossei: { eye: [0, -0.05, -0.2], target: [0, -0.05, 0] },
+                fds: { eye: [0.2, 0.1, 0.3], target: [0.1, 0, 0] },
+                fdp: { eye: [0.15, 0.05, 0.25], target: [0.05, 0, 0] }
+            }
+        },
+        
+        // Brachial Plexus
+        brachial_plexus: {
+            uid: 'c7c6abed85924baeb04a4d3f4c241083',
+            name: 'Brachial Plexus',
+            credit: 'lludpt2017',
+            cameras: {
+                default: { eye: [0, 0, 1], target: [0, 0, 0] },
+                roots: { eye: [0, 0.2, 0.8], target: [0, 0.1, 0] },
+                cords: { eye: [0, -0.1, 0.8], target: [0, -0.1, 0] }
+            }
+        },
+        
+        // Carpal Tunnel - University of Michigan
+        carpal_tunnel: {
+            uid: 'abe41da6b7c245a09f90fd52cb9c31e0',
+            name: 'Carpal Tunnel',
+            credit: 'Bluelink Anatomy - University of Michigan',
+            cameras: {
+                default: { eye: [0, 0, 0.3], target: [0, 0, 0] },
+                pulleys: { eye: [0.1, 0, 0.2], target: [0.05, 0, 0] }
+            }
+        },
+        
+        // Shoulder Joint
+        shoulder_joint: {
+            uid: '94489e01f40548b5a0b4f0a6477c36a7',
+            name: 'Shoulder Joint',
+            credit: 'University of Dundee',
+            cameras: {
+                default: { eye: [0.5, 0.2, 0.5], target: [0, 0, 0] },
+                rotator_cuff: { eye: [-0.3, 0.2, 0.4], target: [0, 0, 0] },
+                supraspinatus: { eye: [0, 0.4, 0.3], target: [0, 0.1, 0] },
+                subscapularis: { eye: [0.4, 0, 0.3], target: [0, 0, 0] }
+            }
+        },
+        
+        // Hand bones with labels
+        hand_bones: {
+            uid: '1704c8bec5db422fbe17c1e9650c293a',
+            name: 'Anatomy of Hand and Wrist Bones',
+            credit: 'Soma3D',
+            cameras: {
+                default: { eye: [0, 0, 0.4], target: [0, 0, 0] }
+            }
+        }
+    };
+
+    // Structure to 3D model mapping
+    const STRUCTURE_MODEL_MAP = {
+        // Back muscles
+        lat: { model: 'shoulder_arm', camera: 'lat' },
+        trapezius: { model: 'shoulder_arm', camera: 'trapezius' },
+        rhomboids: { model: 'shoulder_arm', camera: 'trapezius' },
+        serratus: { model: 'shoulder_arm', camera: 'lat' },
+        levator: { model: 'shoulder_arm', camera: 'trapezius' },
+        
+        // Shoulder
+        supraspinatus: { model: 'shoulder_joint', camera: 'supraspinatus' },
+        infraspinatus: { model: 'shoulder_joint', camera: 'rotator_cuff' },
+        subscapularis: { model: 'shoulder_joint', camera: 'subscapularis' },
+        deltoid: { model: 'shoulder_arm', camera: 'deltoid' },
+        teres_minor: { model: 'shoulder_joint', camera: 'rotator_cuff' },
+        teres_major: { model: 'shoulder_arm', camera: 'lat' },
+        
+        // Arm
+        biceps: { model: 'shoulder_arm', camera: 'biceps' },
+        brachialis: { model: 'shoulder_arm', camera: 'brachialis' },
+        triceps: { model: 'shoulder_arm', camera: 'triceps' },
+        coracobrachialis: { model: 'shoulder_arm', camera: 'biceps' },
+        
+        // Forearm
+        fdp: { model: 'hand_forearm', camera: 'fdp' },
+        fds: { model: 'hand_forearm', camera: 'fds' },
+        pronator_teres: { model: 'hand_forearm', camera: 'fds' },
+        fpl: { model: 'hand_forearm', camera: 'thenar' },
+        brachioradialis: { model: 'shoulder_arm', camera: 'forearm' },
+        extensors: { model: 'shoulder_arm', camera: 'forearm' },
+        
+        // Hand
+        lumbricals: { model: 'hand_forearm', camera: 'lumbricals' },
+        interossei: { model: 'hand_forearm', camera: 'interossei' },
+        pulleys: { model: 'carpal_tunnel', camera: 'pulleys' },
+        thenar: { model: 'hand_forearm', camera: 'thenar' },
+        hypothenar: { model: 'hand_forearm', camera: 'hypothenar' },
+        
+        // Nerves
+        brachial_plexus: { model: 'brachial_plexus', camera: 'default' },
+        median_nerve: { model: 'carpal_tunnel', camera: 'default' },
+        ulnar_nerve: { model: 'hand_forearm', camera: 'hypothenar' },
+        radial_nerve: { model: 'shoulder_arm', camera: 'triceps' },
+        musculocutaneous: { model: 'shoulder_arm', camera: 'biceps' },
+        axillary_nerve: { model: 'shoulder_joint', camera: 'default' },
+        
+        // Arteries
+        axillary_artery: { model: 'shoulder_arm', camera: 'default' },
+        brachial_artery: { model: 'shoulder_arm', camera: 'biceps' },
+        radial_ulnar_arteries: { model: 'hand_forearm', camera: 'default' }
+    };
+
+    // 2D Image fallbacks
     const IMAGES = {
-        // Muscles
         forearm: 'https://teachmeanatomy.info/wp-content/uploads/Deep-Flexor-Muscles-of-the-Anterior-Forearm-1024x355.png',
         forearm_superficial: 'https://teachmeanatomy.info/wp-content/uploads/Superficial-Flexor-Muscles-of-the-Anterior-Forearm.png',
         back: 'https://teachmeanatomy.info/wp-content/uploads/Superficial-Muscles-of-the-Back-857x1024.jpg',
@@ -716,588 +998,328 @@
         shoulder: 'https://teachmeanatomy.info/wp-content/uploads/The-Rotator-Cuff-Muscles-of-the-Shoulder-Joint-1024x357.jpg',
         shoulder_deltoid: 'https://teachmeanatomy.info/wp-content/uploads/The-Deltoid-and-Teres-Major-Muscles-751x1024.jpg',
         hand: 'https://teachmeanatomy.info/wp-content/uploads/Palmar-View-of-the-Thenar-Muscles-of-the-Thumb-and-Hand-Labelled-TeachMeAnatomy.jpg',
-        // Nerves
         brachial_plexus: 'https://teachmeanatomy.info/wp-content/uploads/2013/02/Labelled-Diagram-of-the-Brachial-Plexus-1024x768.jpg',
-        brachial_plexus_neck: 'https://teachmeanatomy.info/wp-content/uploads/Anatomical-Position-of-the-Proximal-Portion-of-the-Brachial-Plexus.jpg',
         musculocutaneous: 'https://teachmeanatomy.info/wp-content/uploads/2012/04/Musculocutaneous-Nerve-Derivation-from-the-Brachial-Plexus-1024x768.jpg',
-        // Arteries
         arteries_overview: 'https://teachmeanatomy.info/wp-content/uploads/Overview-of-Arterial-Supply-to-the-Upper-Limbs-1024x944.png',
         axillary_artery: 'https://teachmeanatomy.info/wp-content/uploads/Parts-and-Branches-of-the-Axillary-Artery-1024x520.png',
         brachial_artery: 'https://teachmeanatomy.info/wp-content/uploads/Anatomical-Course-and-Branches-of-the-Brachial-Artery-1024x614.jpg'
     };
 
+    // ============================================
+    // ANATOMY DATABASE
+    // ============================================
     const ANATOMY_DB = [
-        // === THE BACK ===
+        // === MUSCLES: BACK ===
         {
-            id: 'lat',
-            name: 'Latissimus Dorsi',
-            latin: 'Musculus latissimus dorsi',
-            region: 'Back',
-            image: IMAGES.back,
-            credit: 'TeachMeAnatomy',
-            origin: 'Spinous processes T7–T12, thoracolumbar fascia, iliac crest, inferior 3–4 ribs, inferior angle of scapula',
-            insertion: 'Floor of the intertubercular (bicipital) groove of the humerus',
-            nerve: 'Thoracodorsal nerve (C6, C7, C8) — posterior cord',
-            artery: 'Thoracodorsal artery (branch of subscapular)',
-            actions: 'Extension, adduction, and medial rotation of shoulder; assists forced expiration',
-            climbingCue: 'Pay attention to <strong>lat engagement on every pull-down</strong>. Feel the connection from hands to hips. When your mid-back fatigues, that\'s your lat approaching failure.',
-            climbingDetail: 'The primary pulling muscle. Every pull-down is powered by lats. Dominant on steep overhangs. Proximally connects to erector spinae and contralateral gluteus maximus (posterior oblique sling).',
-            clinical: 'Thoracodorsal nerve at risk during axillary lymph node dissection. Damage → weakness pushing on armrests to stand. Also used as muscle flap in breast reconstruction.'
+            id: 'lat', name: 'Latissimus Dorsi', latin: 'Musculus latissimus dorsi', type: 'muscle',
+            region: 'Back', image: IMAGES.back, credit: 'TeachMeAnatomy',
+            origin: 'Spinous processes T7–T12, thoracolumbar fascia, iliac crest, inferior 3–4 ribs',
+            insertion: 'Floor of the intertubercular groove of the humerus',
+            nerve: 'Thoracodorsal nerve (C6, C7, C8)',
+            artery: 'Thoracodorsal artery',
+            actions: 'Extension, adduction, and medial rotation of shoulder',
+            climbingCue: 'Pay attention to <strong>lat engagement on every pull-down</strong>. Feel the connection from hands to hips.',
+            climbingDetail: 'The primary pulling muscle. Every pull-down is powered by lats. Dominant on steep overhangs.',
+            clinical: 'Thoracodorsal nerve at risk during axillary lymph node dissection.'
         },
         {
-            id: 'trapezius',
-            name: 'Trapezius',
-            latin: 'Musculus trapezius',
-            region: 'Back',
-            image: IMAGES.back,
-            credit: 'TeachMeAnatomy',
-            origin: 'Medial 1/3 superior nuchal line, EOP, ligamentum nuchae, spinous processes C7–T12',
+            id: 'trapezius', name: 'Trapezius', latin: 'Musculus trapezius', type: 'muscle',
+            region: 'Back', image: IMAGES.back, credit: 'TeachMeAnatomy',
+            origin: 'Superior nuchal line, ligamentum nuchae, C7–T12 spinous processes',
             insertion: 'Lateral 1/3 clavicle, acromion, spine of scapula',
-            nerve: 'Motor: Spinal accessory (CN XI). Proprioception: C3, C4',
-            artery: 'Transverse cervical artery (thyrocervical trunk)',
-            actions: 'Upper: elevate scapula. Middle: retract. Lower: depress. All: upward rotation of glenoid.',
-            climbingCue: 'Pay attention to <strong>trap fibers during different moves</strong>. Upper fibers shrug during top-outs. Lower fibers keep shoulders packed during dead-hangs. Middle fibers retract during lock-offs.',
-            climbingDetail: 'Stabilizes scapula throughout every climbing movement. Upper fibers often overactive — focus on engaging lower fibers.',
-            clinical: 'CN XI is superficial in posterior triangle — vulnerable during lymph node biopsy. Damage → cannot shrug, difficulty abducting past 90°.'
+            nerve: 'Spinal accessory (CN XI)',
+            artery: 'Transverse cervical artery',
+            actions: 'Upper: elevate. Middle: retract. Lower: depress scapula.',
+            climbingCue: 'Pay attention to <strong>trap fibers during different moves</strong>. Lower fibers keep shoulders packed during dead-hangs.',
+            climbingDetail: 'Stabilizes scapula throughout every climbing movement.',
+            clinical: 'CN XI damage → cannot shrug, difficulty abducting past 90°.'
         },
         {
-            id: 'rhomboids',
-            name: 'Rhomboid Major & Minor',
-            latin: 'Musculi rhomboidei',
-            region: 'Back',
-            image: IMAGES.back,
-            credit: 'TeachMeAnatomy',
-            origin: 'Minor: ligamentum nuchae, C7–T1. Major: T2–T5 spinous processes',
+            id: 'rhomboids', name: 'Rhomboid Major & Minor', latin: 'Musculi rhomboidei', type: 'muscle',
+            region: 'Back', image: IMAGES.back, credit: 'TeachMeAnatomy',
+            origin: 'C7–T5 spinous processes',
             insertion: 'Medial border of scapula',
-            nerve: 'Dorsal scapular nerve (C5) — pierces middle scalene',
+            nerve: 'Dorsal scapular nerve (C5)',
             artery: 'Dorsal scapular artery',
-            actions: 'Retract scapula, inferior rotation of glenoid, stabilize scapula to thoracic wall',
-            climbingCue: 'Pay attention to <strong>rhomboids when squeezing shoulder blades together</strong> at the bottom of a pull. Essential for lock-off scapular stability.',
-            climbingDetail: 'Fire when you squeeze shoulder blades together. Engage most during slow, controlled descents. Oppose serratus anterior (retraction vs protraction).',
-            clinical: 'Dorsal scapular nerve pierces middle scalene — entrapment mimics cervical radiculopathy. Causes medial winging (distinct from lateral winging).'
+            actions: 'Retract scapula, stabilize scapula to thoracic wall',
+            climbingCue: 'Pay attention to <strong>rhomboids when squeezing shoulder blades together</strong>.',
+            climbingDetail: 'Fire when you squeeze shoulder blades together during lock-offs.',
+            clinical: 'Dorsal scapular nerve entrapment mimics cervical radiculopathy.'
         },
         {
-            id: 'serratus',
-            name: 'Serratus Anterior',
-            latin: 'Musculus serratus anterior',
-            region: 'Thorax',
-            image: IMAGES.back,
-            credit: 'TeachMeAnatomy',
-            origin: 'External surfaces of ribs 1–8, via fleshy digitations',
-            insertion: 'Costal surface of medial border and inferior angle of scapula',
-            nerve: 'Long thoracic nerve (C5, C6, C7) — descends superficially on muscle',
-            artery: 'Lateral thoracic artery, thoracodorsal artery',
-            actions: 'Protraction of scapula, upward rotation of glenoid, holds scapula to chest wall',
-            climbingCue: 'Pay attention to <strong>serratus when reaching far or mantling</strong>. Feel the lateral rib activation. The "boxer\'s muscle." Without it, scapula would wing off chest wall.',
-            climbingDetail: 'Fires every time you reach for a distant hold or push upward. Lower digitations interdigitate with external oblique. Forms force couple with trapezius for upward rotation.',
-            clinical: 'Long thoracic nerve runs superficially — vulnerable during mastectomy, chest tube insertion. Damage → classic winged scapula. High-yield board question.'
+            id: 'serratus', name: 'Serratus Anterior', latin: 'Musculus serratus anterior', type: 'muscle',
+            region: 'Thorax', image: IMAGES.back, credit: 'TeachMeAnatomy',
+            origin: 'External surfaces of ribs 1–8',
+            insertion: 'Medial border and inferior angle of scapula',
+            nerve: 'Long thoracic nerve (C5, C6, C7)',
+            artery: 'Lateral thoracic artery',
+            actions: 'Protraction of scapula, upward rotation, holds scapula to chest',
+            climbingCue: 'Pay attention to <strong>serratus when reaching far or mantling</strong>. The "boxer\'s muscle."',
+            climbingDetail: 'Fires every time you reach for a distant hold or push upward.',
+            clinical: 'Long thoracic nerve damage → classic winged scapula.'
         },
+        // === MUSCLES: SHOULDER ===
         {
-            id: 'levator',
-            name: 'Levator Scapulae',
-            latin: 'Musculus levator scapulae',
-            region: 'Neck/Back',
-            image: IMAGES.back,
-            credit: 'TeachMeAnatomy',
-            origin: 'Transverse processes C1–C4 (posterior tubercles)',
-            insertion: 'Superior angle and medial border of scapula (above spine)',
-            nerve: 'Dorsal scapular nerve (C5) and direct branches C3, C4',
-            artery: 'Dorsal scapular artery, ascending cervical',
-            actions: 'Elevation of scapula, inferior rotation of glenoid, lateral flexion of cervical spine',
-            climbingCue: 'Pay attention to <strong>levator scapulae tension during reaching</strong>. Often becomes tight in climbers who carry neck tension. Common source of post-climbing stiffness.',
-            climbingDetail: 'Stabilizes superior angle during pulling. Works with upper trapezius and rhomboids to elevate scapula.',
-            clinical: 'Common source of neck/upper shoulder pain and tension headaches. Develops myofascial trigger points at insertion. Shares dorsal scapular nerve with rhomboids.'
-        },
-        // === SHOULDER & ROTATOR CUFF ===
-        {
-            id: 'supraspinatus',
-            name: 'Supraspinatus',
-            latin: 'Musculus supraspinatus',
-            region: 'Shoulder (Rotator Cuff)',
-            image: IMAGES.shoulder,
-            credit: 'Wikimedia Commons',
+            id: 'supraspinatus', name: 'Supraspinatus', latin: 'Musculus supraspinatus', type: 'muscle',
+            region: 'Shoulder (Rotator Cuff)', image: IMAGES.shoulder, credit: 'TeachMeAnatomy',
             origin: 'Supraspinous fossa of scapula',
-            insertion: 'Superior facet of greater tubercle; blends with superior capsule',
-            nerve: 'Suprascapular nerve (C5, C6) — through suprascapular notch',
-            artery: 'Suprascapular artery — passes OVER the ligament',
-            actions: 'Initiates abduction (first 0–15°), stabilizes humeral head in glenoid',
-            climbingCue: 'Pay attention to <strong>supraspinatus when initiating any reach</strong>. Centers the humeral head during pulling and reaching. Most commonly injured rotator cuff muscle in climbers.',
-            climbingDetail: 'Works constantly to center humeral head. Shares suprascapular nerve with infraspinatus. Critical zone ~1cm proximal to insertion has watershed hypovascularity.',
-            clinical: 'Most commonly torn rotator cuff tendon. Empty can test (Jobe): arm 90° abduction, 30° forward, thumb down, resist downward pressure.'
+            insertion: 'Superior facet of greater tubercle',
+            nerve: 'Suprascapular nerve (C5, C6)',
+            artery: 'Suprascapular artery',
+            actions: 'Initiates abduction (first 0–15°), stabilizes humeral head',
+            climbingCue: 'Pay attention to <strong>supraspinatus when initiating any reach</strong>. Most commonly injured rotator cuff muscle.',
+            climbingDetail: 'Works constantly to center humeral head during pulling and reaching.',
+            clinical: 'Most commonly torn rotator cuff tendon. Empty can test (Jobe).'
         },
         {
-            id: 'infraspinatus',
-            name: 'Infraspinatus',
-            latin: 'Musculus infraspinatus',
-            region: 'Shoulder (Rotator Cuff)',
-            image: IMAGES.back,
-            credit: 'TeachMeAnatomy',
+            id: 'infraspinatus', name: 'Infraspinatus', latin: 'Musculus infraspinatus', type: 'muscle',
+            region: 'Shoulder (Rotator Cuff)', image: IMAGES.shoulder, credit: 'TeachMeAnatomy',
             origin: 'Infraspinous fossa of scapula',
-            insertion: 'Middle facet of greater tubercle of humerus',
-            nerve: 'Suprascapular nerve (C5, C6) — after spinoglenoid notch',
-            artery: 'Suprascapular and circumflex scapular arteries',
-            actions: 'Lateral (external) rotation of shoulder, posterior stabilization of humeral head',
-            climbingCue: 'Pay attention to <strong>infraspinatus during gastons</strong>. External rotation engages it. Essential for decelerating dynamic moves. Key stabilizer preventing anterior dislocation.',
-            climbingDetail: 'Fires during gastons. Works as force couple with subscapularis — centering humeral head in glenoid.',
-            clinical: 'Ganglion cyst at spinoglenoid notch selectively denervates infraspinatus, sparing supraspinatus. Presents as isolated lateral rotation weakness.'
+            insertion: 'Middle facet of greater tubercle',
+            nerve: 'Suprascapular nerve (C5, C6)',
+            artery: 'Suprascapular artery',
+            actions: 'Lateral rotation, posterior stabilization of humeral head',
+            climbingCue: 'Pay attention to <strong>infraspinatus during gastons</strong>. Essential for decelerating dynamic moves.',
+            climbingDetail: 'Fires during gastons. Works as force couple with subscapularis.',
+            clinical: 'Ganglion cyst at spinoglenoid notch → isolated lateral rotation weakness.'
         },
         {
-            id: 'subscapularis',
-            name: 'Subscapularis',
-            latin: 'Musculus subscapularis',
-            region: 'Shoulder (Rotator Cuff)',
-            image: IMAGES.shoulder,
-            credit: 'Wikimedia Commons',
-            origin: 'Subscapular fossa (entire anterior surface of scapula)',
-            insertion: 'Lesser tubercle of humerus and transverse humeral ligament',
-            nerve: 'Upper and lower subscapular nerves (C5, C6, C7)',
-            artery: 'Subscapular artery (largest branch of 3rd part axillary)',
-            actions: 'Medial (internal) rotation, adduction, anterior stabilization of humeral head',
-            climbingCue: 'Pay attention to <strong>subscapularis during cross-body moves and arm locks</strong>. Largest rotator cuff muscle. Powers internal rotation and prevents anterior humeral translation.',
-            climbingDetail: 'Largest and strongest rotator cuff muscle. ONLY rotator cuff on lesser tubercle. Transverse humeral ligament holds long head biceps in groove.',
-            clinical: 'Lift-off test (Gerber): hand behind back, lift off. Belly press test: press hand against abdomen. Only rotator cuff on lesser tubercle.'
+            id: 'deltoid', name: 'Deltoid', latin: 'Musculus deltoideus', type: 'muscle',
+            region: 'Shoulder', image: IMAGES.shoulder_deltoid, credit: 'TeachMeAnatomy',
+            origin: 'Lateral 1/3 clavicle, acromion, scapular spine',
+            insertion: 'Deltoid tuberosity on lateral humerus',
+            nerve: 'Axillary nerve (C5, C6)',
+            artery: 'Posterior circumflex humeral',
+            actions: 'Anterior: flexion. Middle: abduction 15–90°. Posterior: extension.',
+            climbingCue: 'Pay attention to <strong>deltoid during top-outs and gastons</strong>. Powers upward push.',
+            climbingDetail: 'Primary mover for abduction past 15°.',
+            clinical: 'Anterior dislocations → axillary nerve injury → "regimental badge" anesthesia.'
         },
+        // === MUSCLES: ARM ===
         {
-            id: 'deltoid',
-            name: 'Deltoid',
-            latin: 'Musculus deltoideus',
-            region: 'Shoulder',
-            image: IMAGES.shoulder_deltoid,
-            credit: 'TeachMeAnatomy',
-            origin: 'Anterior: lateral 1/3 clavicle. Middle: acromion. Posterior: scapular spine.',
-            insertion: 'Deltoid tuberosity on lateral humeral shaft',
-            nerve: 'Axillary nerve (C5, C6) — through quadrilateral space',
-            artery: 'Posterior circumflex humeral, thoracoacromial (deltoid branch)',
-            actions: 'Anterior: flexion/medial rotation. Middle: abduction 15–90°. Posterior: extension/lateral rotation.',
-            climbingCue: 'Pay attention to <strong>deltoid during top-outs and gastons</strong>. Middle deltoid powers upward push. Posterior for gastons. Anterior for front-reaching.',
-            climbingDetail: 'Primary mover for abduction past 15°. Origin mirrors trapezius insertion — continuous superficial sheet. Forms force couple with supraspinatus.',
-            clinical: 'Surgical neck fractures or anterior dislocations → axillary nerve injury → deltoid paralysis + "regimental badge" anesthesia. Always test sensation before reducing dislocations.'
-        },
-        {
-            id: 'teres_minor',
-            name: 'Teres Minor',
-            latin: 'Musculus teres minor',
-            region: 'Shoulder (Rotator Cuff)',
-            image: IMAGES.back,
-            credit: 'TeachMeAnatomy',
-            origin: 'Upper 2/3 of lateral border of scapula (posterior surface)',
-            insertion: 'Inferior facet of greater tubercle of humerus; blends with posterior capsule',
-            nerve: 'Axillary nerve (C5, C6) — branch given off in quadrilateral space',
-            artery: 'Circumflex scapular artery, posterior circumflex humeral artery',
-            actions: 'Lateral (external) rotation of shoulder, weak adduction, posterior stabilization of humeral head',
-            climbingCue: 'Pay attention to <strong>teres minor during gastons and external rotation moves</strong>. Works with infraspinatus to externally rotate. Helps decelerate internal rotation during dynamic catches.',
-            climbingDetail: 'Shares external rotation duty with infraspinatus. Part of quadrilateral space boundary (with teres major, triceps long head, humerus). Smaller but important stabilizer.',
-            clinical: 'Usually spared in rotator cuff tears (supraspinatus tears first). Quadrilateral space syndrome: axillary nerve compression → teres minor weakness + deltoid involvement + lateral shoulder numbness.'
-        },
-        {
-            id: 'teres_major',
-            name: 'Teres Major',
-            latin: 'Musculus teres major',
-            region: 'Shoulder',
-            image: IMAGES.shoulder_deltoid,
-            credit: 'TeachMeAnatomy',
-            origin: 'Posterior surface of inferior angle of scapula, lower 1/3 lateral border',
-            insertion: 'Medial lip of intertubercular groove (with latissimus dorsi)',
-            nerve: 'Lower subscapular nerve (C5, C6, C7) — posterior cord',
-            artery: 'Circumflex scapular artery, thoracodorsal artery',
-            actions: 'Medial rotation, adduction, and extension of shoulder — "lat\'s little helper"',
-            climbingCue: 'Pay attention to <strong>teres major during pull-downs and lock-offs</strong>. Works synergistically with lat. Feel it in the lower scapular region during powerful adduction.',
-            climbingDetail: 'Called "lat\'s little helper" — same actions, same insertion (medial lip of groove). NOT a rotator cuff muscle despite the name similarity to teres minor. Forms boundary of triangular and quadrilateral spaces.',
-            clinical: 'Rarely injured in isolation. Forms posterior axillary fold with lat. Triangular space (teres major, teres minor, long head triceps) transmits circumflex scapular artery.'
-        },
-        // === THE ARM ===
-        {
-            id: 'biceps',
-            name: 'Biceps Brachii',
-            latin: 'Musculus biceps brachii',
-            region: 'Arm (Anterior)',
-            image: IMAGES.arm,
-            credit: 'TeachMeAnatomy',
-            origin: 'Long head: supraglenoid tubercle (intracapsular). Short head: coracoid process.',
-            insertion: 'Radial tuberosity + bicipital aponeurosis into forearm fascia',
+            id: 'biceps', name: 'Biceps Brachii', latin: 'Musculus biceps brachii', type: 'muscle',
+            region: 'Arm (Anterior)', image: IMAGES.arm, credit: 'TeachMeAnatomy',
+            origin: 'Long head: supraglenoid tubercle. Short head: coracoid process.',
+            insertion: 'Radial tuberosity + bicipital aponeurosis',
             nerve: 'Musculocutaneous nerve (C5, C6)',
-            artery: 'Brachial artery (muscular branches)',
-            actions: 'Supination (most powerful when elbow 90°), elbow flexion, weak shoulder flexion',
-            climbingCue: 'Pay attention to <strong>biceps on sidepulls and underlings</strong>. Stronger supinator than flexor — feel it engage twisting. Long head can develop impingement.',
-            climbingDetail: 'Fires with every lock-off. Long head is intracapsular but extrasynovial — secondary humeral head depressor. Aponeurosis protects brachial artery + median nerve.',
-            clinical: 'Bicipital aponeurosis protects structures in cubital fossa. Long head rupture → "Popeye deformity." Speed\'s test: resisted forward flexion with extended elbow.'
+            artery: 'Brachial artery',
+            actions: 'Supination (strongest when elbow 90°), elbow flexion',
+            climbingCue: 'Pay attention to <strong>biceps on sidepulls and underlings</strong>. Stronger supinator than flexor.',
+            climbingDetail: 'Fires with every lock-off. Aponeurosis protects brachial artery + median nerve.',
+            clinical: 'Long head rupture → "Popeye deformity." Speed\'s test for tendinopathy.'
         },
         {
-            id: 'brachialis',
-            name: 'Brachialis',
-            latin: 'Musculus brachialis',
-            region: 'Arm (Anterior)',
-            image: IMAGES.arm,
-            credit: 'TeachMeAnatomy',
-            origin: 'Distal half of anterior humeral surface, intermuscular septa',
-            insertion: 'Coronoid process and tuberosity of ulna',
-            nerve: 'Musculocutaneous (C5, C6) primary; lateral portion also radial nerve (C7)',
-            artery: 'Brachial artery, radial recurrent artery',
+            id: 'brachialis', name: 'Brachialis', latin: 'Musculus brachialis', type: 'muscle',
+            region: 'Arm (Anterior)', image: IMAGES.arm, credit: 'TeachMeAnatomy',
+            origin: 'Distal half of anterior humerus',
+            insertion: 'Coronoid process of ulna',
+            nerve: 'Musculocutaneous (C5, C6); radial nerve (C7)',
+            artery: 'Brachial artery',
             actions: 'Elbow flexion — primary flexor regardless of forearm position',
-            climbingCue: 'Pay attention to <strong>brachialis during lock-offs</strong>. True workhorse of elbow flexion. Works equally in pronation, supination, or neutral. Feel the deep anterior arm burn.',
-            climbingDetail: 'More important than biceps! Inserts on ulna (doesn\'t rotate), so force independent of forearm position. Forms floor of cubital fossa. Dual nerve supply ensures flexion preserved.',
-            clinical: 'Strongest pure elbow flexor. Dual innervation ensures redundancy. Musculocutaneous continues as lateral cutaneous nerve of forearm.'
+            climbingCue: 'Pay attention to <strong>brachialis during lock-offs</strong>. True workhorse of elbow flexion.',
+            climbingDetail: 'More important than biceps! Inserts on ulna, so force independent of forearm position.',
+            clinical: 'Dual innervation ensures flexion preserved with single nerve injury.'
         },
         {
-            id: 'triceps',
-            name: 'Triceps Brachii',
-            latin: 'Musculus triceps brachii',
-            region: 'Arm (Posterior)',
-            image: IMAGES.triceps,
-            credit: 'TeachMeAnatomy',
-            origin: 'Long head: infraglenoid tubercle. Lateral head: above radial groove. Medial head: below radial groove.',
+            id: 'triceps', name: 'Triceps Brachii', latin: 'Musculus triceps brachii', type: 'muscle',
+            region: 'Arm (Posterior)', image: IMAGES.triceps, credit: 'TeachMeAnatomy',
+            origin: 'Long head: infraglenoid tubercle. Lateral/Medial heads: humerus.',
             insertion: 'Olecranon process of ulna',
-            nerve: 'Radial nerve (C6, C7, C8) — each head gets own branch',
-            artery: 'Deep brachial (profunda brachii) — travels with radial nerve in groove',
-            actions: 'Elbow extension (all heads). Long head: shoulder extension and adduction.',
-            climbingCue: 'Pay attention to <strong>triceps during mantling and pressing</strong>. Powers top-outs. Decelerates elbow flexion eccentrically. Long head assists lats in shoulder extension.',
-            climbingDetail: 'Long head passes between teres major and minor creating quadrilateral space boundaries. Olecranon bursa overlies insertion ("student\'s elbow").',
-            clinical: 'Radial nerve + profunda brachii in radial groove. Midshaft humeral fracture → wrist drop, loss of brachioradialis reflex, sensory loss in snuffbox. Triceps usually spared.'
+            nerve: 'Radial nerve (C6, C7, C8)',
+            artery: 'Deep brachial artery',
+            actions: 'Elbow extension. Long head: shoulder extension.',
+            climbingCue: 'Pay attention to <strong>triceps during mantling and pressing</strong>. Powers top-outs.',
+            climbingDetail: 'Long head assists lats in shoulder extension. Essential for push movements.',
+            clinical: 'Midshaft humeral fracture → wrist drop (radial nerve in spiral groove).'
         },
+        // === MUSCLES: FOREARM ===
         {
-            id: 'coracobrachialis',
-            name: 'Coracobrachialis',
-            latin: 'Musculus coracobrachialis',
-            region: 'Arm (Anterior)',
-            image: IMAGES.arm,
-            credit: 'TeachMeAnatomy',
-            origin: 'Apex of coracoid process of scapula (with short head biceps)',
-            insertion: 'Middle 1/3 of medial humeral surface (between triceps and brachialis insertions)',
-            nerve: 'Musculocutaneous nerve (C5, C6, C7) — pierces the muscle belly',
-            artery: 'Brachial artery (muscular branches)',
-            actions: 'Flexion and adduction of shoulder, weak stabilization of humeral head',
-            climbingCue: 'Pay attention to <strong>coracobrachialis when reaching forward and across</strong>. Helps pull arm toward body. Works during compression moves and cross-body reaching.',
-            climbingDetail: 'Key landmark: musculocutaneous nerve pierces it ~5-8cm below coracoid. Short head biceps and coracobrachialis form conjoint tendon. Assists in pulling arm across body for cross-through moves.',
-            clinical: 'Musculocutaneous nerve pierces the muscle — entrapment causes anterior arm weakness and lateral forearm numbness. Conjoint tendon avulsion rare but causes significant weakness.'
-        },
-        // === FOREARM ===
-        {
-            id: 'fdp',
-            name: 'Flexor Digitorum Profundus',
-            latin: 'Musculus FDP',
-            region: 'Forearm (Deep)',
-            image: IMAGES.forearm,
-            credit: 'TeachMeAnatomy',
+            id: 'fdp', name: 'Flexor Digitorum Profundus', latin: 'Musculus FDP', type: 'muscle',
+            region: 'Forearm (Deep)', image: IMAGES.forearm, credit: 'TeachMeAnatomy',
             origin: 'Proximal 3/4 anterior ulna, interosseous membrane',
             insertion: 'Bases of distal phalanges digits 2–5',
-            nerve: 'Lateral (2,3): anterior interosseous nerve. Medial (4,5): ulnar nerve (C8, T1).',
-            artery: 'Anterior interosseous artery, ulnar artery',
-            actions: 'Flexion of DIP joints — ONLY muscle that flexes DIP. Also assists PIP, MCP, wrist.',
-            climbingCue: 'Pay attention to <strong>FDP when crimping</strong>. The final fingertip curl. Feel the deep forearm burn. Tendons give rise to lumbricals. Lumbrical shift injury is climbing-specific.',
-            climbingDetail: 'Only muscle that flexes DIP — the crimp engine. Only forearm flexor originating entirely from ulna. Passes through FDS split (chiasm of Camper).',
-            clinical: 'Anterior interosseous syndrome (Kiloh-Nevin): AIN is pure motor, no sensory loss. Cannot make "OK" sign. Split innervation reflects embryological boundary.'
-        },
-        {
-            id: 'fds',
-            name: 'Flexor Digitorum Superficialis',
-            latin: 'Musculus FDS',
-            region: 'Forearm (Intermediate)',
-            image: IMAGES.forearm_superficial,
-            credit: 'TeachMeAnatomy',
-            origin: 'Humeroulnar head: medial epicondyle + coronoid. Radial head: superior anterior radius.',
-            insertion: 'Sides of middle phalanges digits 2–5. Splits (chiasm of Camper) to let FDP through.',
-            nerve: 'Median nerve (C7, C8, T1)',
-            artery: 'Ulnar artery, anterior interosseous artery',
-            actions: 'Flexion of PIP joints digits 2–5. Assists MCP and wrist flexion.',
-            climbingCue: 'Pay attention to <strong>FDS on slopers and open-hand grips</strong>. Flexes PIP. Test in isolation: hold other fingers extended, flex one PIP.',
-            climbingDetail: 'Crucial for open-hand grips. Median nerve and ulnar artery pass deep to FDS arch entering forearm.',
-            clinical: 'FDS splits for FDP (chiasm of Camper). Test: hold all others extended, flex PIP. FDS to 5th digit absent/weak in ~20%.'
-        },
-        {
-            id: 'pronator_teres',
-            name: 'Pronator Teres',
-            latin: 'Musculus pronator teres',
-            region: 'Forearm (Superficial)',
-            image: IMAGES.forearm_superficial,
-            credit: 'TeachMeAnatomy',
-            origin: 'Humeral head: medial epicondyle (common flexor origin). Ulnar head: coronoid process.',
-            insertion: 'Middle of lateral surface of radius (pronator tuberosity)',
-            nerve: 'Median nerve (C6, C7) — passes between the two heads',
-            artery: 'Ulnar artery, anterior ulnar recurrent artery',
-            actions: 'Pronation of forearm, weak elbow flexion',
-            climbingCue: 'Pay attention to <strong>pronator teres when turning palms down on slopers</strong>. Controls forearm rotation. Median nerve passes between its two heads — overuse can cause compression.',
-            climbingDetail: 'Forms medial boundary of cubital fossa. Median nerve passes between humeral and ulnar heads. Works with pronator quadratus for full pronation. Important for sloper orientation.',
-            clinical: 'Pronator syndrome: median nerve compression between the two heads. Presents like carpal tunnel but with forearm pain and weakness of thenar muscles. Resisted pronation reproduces symptoms.'
-        },
-        {
-            id: 'fpl',
-            name: 'Flexor Pollicis Longus',
-            latin: 'Musculus flexor pollicis longus',
-            region: 'Forearm (Deep)',
-            image: IMAGES.forearm,
-            credit: 'TeachMeAnatomy',
-            origin: 'Anterior surface of radius (middle 1/3), adjacent interosseous membrane',
-            insertion: 'Base of distal phalanx of thumb (palmar surface)',
-            nerve: 'Anterior interosseous nerve (C8, T1) — branch of median nerve',
+            nerve: 'Lateral (2,3): anterior interosseous. Medial (4,5): ulnar nerve.',
             artery: 'Anterior interosseous artery',
-            actions: 'Flexion of IP joint of thumb — ONLY muscle that flexes thumb IP. Assists MCP and CMC flexion.',
-            climbingCue: 'Pay attention to <strong>FPL when crimping with thumb wrap</strong>. Powers the thumb curl over index finger in full crimp. Only muscle flexing thumb IP joint.',
-            climbingDetail: 'Unique to humans — enables precision grip. Tendon passes through carpal tunnel in its own synovial sheath. Works with thenar muscles for powerful pinch grip. Critical for thumb-over crimp.',
-            clinical: 'Anterior interosseous syndrome: cannot make "OK" sign (FPL + FDP to index affected). Linburg-Comstock syndrome: anomalous connection between FPL and FDP causing linked thumb-index movement.'
+            actions: 'Flexion of DIP joints — ONLY muscle that flexes DIP',
+            climbingCue: 'Pay attention to <strong>FDP when crimping</strong>. The final fingertip curl.',
+            climbingDetail: 'Only muscle that flexes DIP — the crimp engine.',
+            clinical: 'Anterior interosseous syndrome: cannot make "OK" sign.'
         },
         {
-            id: 'brachioradialis',
-            name: 'Brachioradialis',
-            latin: 'Musculus brachioradialis',
-            region: 'Forearm (Lateral)',
-            image: IMAGES.forearm_superficial,
-            credit: 'TeachMeAnatomy',
-            origin: 'Proximal 2/3 of lateral supracondylar ridge of humerus',
-            insertion: 'Lateral surface of distal radius, just proximal to styloid process',
-            nerve: 'Radial nerve (C5, C6) — before it divides into superficial and deep branches',
-            artery: 'Radial recurrent artery',
-            actions: 'Elbow flexion (especially in neutral/mid-pronated position), returns forearm to neutral from full pronation or supination',
-            climbingCue: 'Pay attention to <strong>brachioradialis during neutral-grip lock-offs</strong>. Works hardest when forearm is mid-pronated. Feel the lateral forearm bulk during elbow flexion.',
-            climbingDetail: 'Flexor innervated by radial nerve (posterior cord) — an embryological oddity. Most effective with forearm in neutral. Forms lateral boundary of cubital fossa. Prominent in climbers.',
-            clinical: 'Brachioradialis reflex tests C5-C6 and radial nerve. Radial nerve courses between brachioradialis and brachialis in forearm. Reflex absent in radial nerve or C6 lesions.'
+            id: 'fds', name: 'Flexor Digitorum Superficialis', latin: 'Musculus FDS', type: 'muscle',
+            region: 'Forearm (Intermediate)', image: IMAGES.forearm_superficial, credit: 'TeachMeAnatomy',
+            origin: 'Medial epicondyle + coronoid. Radial head: anterior radius.',
+            insertion: 'Sides of middle phalanges digits 2–5',
+            nerve: 'Median nerve (C7, C8, T1)',
+            artery: 'Ulnar artery',
+            actions: 'Flexion of PIP joints. Assists MCP and wrist flexion.',
+            climbingCue: 'Pay attention to <strong>FDS on slopers and open-hand grips</strong>. Flexes PIP.',
+            climbingDetail: 'Crucial for open-hand grips. Splits for FDP (chiasm of Camper).',
+            clinical: 'Test: hold all others extended, flex one PIP. FDS to 5th absent in ~20%.'
+        },
+        // === MUSCLES: HAND ===
+        {
+            id: 'lumbricals', name: 'Lumbricals', latin: 'Musculi lumbricales', type: 'muscle',
+            region: 'Hand (Intrinsic)', image: IMAGES.hand, credit: 'TeachMeAnatomy',
+            origin: 'FDP tendons (1st/2nd: unipennate; 3rd/4th: bipennate)',
+            insertion: 'Lateral side of extensor expansion',
+            nerve: '1st/2nd: median. 3rd/4th: deep ulnar nerve.',
+            artery: 'Palmar digital arteries',
+            actions: 'Flex MCP + extend PIP and DIP simultaneously',
+            climbingCue: 'Pay attention to <strong>lumbricals on slopers and half-crimp</strong>. Enable open-hand grip.',
+            climbingDetail: 'Unique: arise from tendons, insert into tendons — no bony attachment.',
+            clinical: 'Lumbrical shift injury: differential FDP loading pulls lumbrical into carpal tunnel.'
         },
         {
-            id: 'extensors',
-            name: 'Wrist & Finger Extensors',
-            latin: 'ECRL, ECRB, ECU, ED, EDM',
-            region: 'Forearm (Posterior)',
-            image: IMAGES.forearm,
-            credit: 'TeachMeAnatomy',
-            origin: 'Lateral epicondyle (common extensor origin) and posterior forearm',
-            insertion: 'ECRL/ECRB: 2nd/3rd MC bases. ECU: 5th MC base. ED: extensor expansions 2-5. EDM: 5th digit expansion.',
-            nerve: 'Posterior interosseous nerve (C7, C8) — deep branch of radial nerve',
-            artery: 'Posterior interosseous artery',
-            actions: 'Extension of wrist (ECRL, ECRB, ECU), extension of MCP joints digits 2-5 (ED, EDM), finger abduction via extensor expansion',
-            climbingCue: 'Pay attention to <strong>extensors when opening hand and setting up for grips</strong>. Balance the powerful flexors. ECRB tendinopathy = lateral epicondylitis ("tennis elbow") common in climbers.',
-            climbingDetail: 'ED tendons connect via juncturae tendinum — can limit independent extension. Extensor expansion receives interossei and lumbricals. Extensors fatigue differently than flexors.',
-            clinical: 'Lateral epicondylitis (tennis elbow): ECRB origin pain, worse with resisted wrist extension. Posterior interosseous syndrome: finger drop without wrist drop (ECRL spared). Saturday night palsy spares extensors proximal to spiral groove.'
-        },
-        // === HAND ===
-        {
-            id: 'lumbricals',
-            name: 'Lumbricals',
-            latin: 'Musculi lumbricales',
-            region: 'Hand (Intrinsic)',
-            image: IMAGES.hand,
-            credit: 'Wikimedia Commons',
-            origin: '1st/2nd: radial side FDP tendons 2,3 (unipennate). 3rd/4th: adjacent FDP tendons (bipennate).',
-            insertion: 'Lateral (radial) side of extensor expansion digits 2–5',
-            nerve: '1st/2nd: median nerve. 3rd/4th: deep ulnar nerve (C8, T1).',
-            artery: 'Common and proper palmar digital arteries',
-            actions: 'Flex MCP + extend PIP and DIP simultaneously — the unique "lumbrical position."',
-            climbingCue: 'Pay attention to <strong>lumbricals on slopers and half-crimp</strong>. Enable open-hand grip: MCP flexion + IP extension maximizes contact area.',
-            climbingDetail: 'Unique: arise from tendons, insert into tendons — no bony attachment. Only muscles simultaneously flexing MCP and extending IP. Split innervation mirrors FDP.',
-            clinical: 'Lumbrical shift injury: differential FDP loading pulls lumbrical into carpal tunnel. In median nerve palsy, loss contributes to "hand of benediction."'
+            id: 'interossei', name: 'Dorsal & Palmar Interossei', latin: 'Musculi interossei', type: 'muscle',
+            region: 'Hand (Intrinsic)', image: IMAGES.hand, credit: 'TeachMeAnatomy',
+            origin: 'Dorsal: adjacent MC sides. Palmar: single MC.',
+            insertion: 'Proximal phalanx bases and extensor expansions',
+            nerve: 'Deep branch of ulnar nerve (C8, T1)',
+            artery: 'Deep palmar arch',
+            actions: 'Dorsal: ABduction (DAB). Palmar: ADduction (PAD).',
+            climbingCue: 'Pay attention to <strong>interossei for finger spread and squeeze</strong>. DAB for wide holds, PAD for cracks.',
+            climbingDetail: 'Fill spaces between metacarpals. Essential for finger control.',
+            clinical: 'Low ulnar lesion → claw hand. Froment\'s sign for adductor pollicis.'
         },
         {
-            id: 'interossei',
-            name: 'Dorsal & Palmar Interossei',
-            latin: 'Musculi interossei',
-            region: 'Hand (Intrinsic)',
-            image: IMAGES.hand,
-            credit: 'Wikimedia Commons',
-            origin: 'Dorsal (4): adjacent sides of two MCs (bipennate). Palmar (3-4): single MC (unipennate).',
-            insertion: 'Proximal phalanx bases and lateral bands of extensor expansions',
-            nerve: 'Deep branch of ulnar nerve (C8, T1) — ALL interossei',
-            artery: 'Deep palmar arch, metacarpal arteries',
-            actions: 'Dorsal: ABduction (DAB). Palmar: ADduction (PAD). Both flex MCP, extend IP via expansion.',
-            climbingCue: 'Pay attention to <strong>interossei for finger spread and squeeze</strong>. DAB = spread for wide holds. PAD = squeeze for cracks/pockets. MCP flex + IP extend crucial for slopers.',
-            climbingDetail: 'First dorsal interosseous most clinically tested (first web space). Fill spaces between metacarpals deep to flexor tendons.',
-            clinical: 'Low ulnar lesion → claw hand (4th/5th hyperextend MCP, flex IP). Ulnar paradox: HIGH lesion = LESS clawing (FDP also lost). Froment\'s sign for adductor pollicis.'
+            id: 'pulleys', name: 'Flexor Pulley System (A2/A4)', latin: 'Vagina fibrosa', type: 'other',
+            region: 'Hand (Finger)', image: IMAGES.hand, credit: 'TeachMeAnatomy',
+            origin: 'A1: MCP. A2: proximal phalanx. A3: PIP. A4: middle phalanx. A5: DIP.',
+            insertion: 'N/A — fibrous sheaths constraining flexor tendons',
+            nerve: 'N/A (non-contractile connective tissue)',
+            artery: 'Digital arteries supply vinculae',
+            actions: 'Prevent bowstringing — hold tendons close to bone',
+            climbingCue: 'Pay attention to <strong>pulley stress when full crimping</strong>. A2 and A4 are critical. Consider half-crimp.',
+            climbingDetail: 'THE most clinically relevant structure for climbing injuries. A2 ruptures most often.',
+            clinical: 'A2 + A4 most important biomechanically. Flexor tenosynovitis: Kanavel signs = emergency.'
         },
         {
-            id: 'pulleys',
-            name: 'Flexor Pulley System (A2/A4)',
-            latin: 'Vagina fibrosa digitorum manus',
-            region: 'Hand (Finger)',
-            image: IMAGES.hand,
-            credit: 'Wikimedia Commons',
-            origin: 'A1: MCP volar plate. A2: proximal phalanx. A3: PIP. A4: middle phalanx. A5: DIP.',
-            insertion: 'N/A — fibrous sheaths constraining flexor tendons to phalanges',
-            nerve: 'N/A (non-contractile connective tissue). Vinculae carry blood vessels to tendons.',
-            artery: 'Digital arteries supply vinculae which vascularize tendons within sheath',
-            actions: 'Prevent bowstringing — hold tendons close to bone for efficient force conversion',
-            climbingCue: 'Pay attention to <strong>pulley stress when full crimping</strong>. A2 and A4 are biomechanically critical. Consider half-crimp or open-hand to reduce strain. Pop = rupture.',
-            climbingDetail: 'THE most clinically relevant structure for climbing injuries. A2 ruptures from aggressive crimping — "pop" followed by swelling, possible visible bowstringing.',
-            clinical: 'A2 + A4 most important biomechanically. Combined rupture may need surgery. A1 pathology → trigger finger. Flexor tenosynovitis: Kanavel signs = surgical emergency.'
+            id: 'thenar', name: 'Thenar Muscles', latin: 'Opponens pollicis, APB, FPB', type: 'muscle',
+            region: 'Hand (Thenar)', image: IMAGES.hand, credit: 'TeachMeAnatomy',
+            origin: 'Flexor retinaculum, trapezium, scaphoid',
+            insertion: 'Opponens: 1st MC. APB: lateral proximal phalanx. FPB: proximal phalanx base.',
+            nerve: 'Recurrent branch of median nerve — "million dollar nerve"',
+            artery: 'Superficial palmar branch of radial',
+            actions: 'Opposition, thumb abduction, thumb MCP flexion',
+            climbingCue: 'Pay attention to <strong>thenar muscles during every pinch grip</strong>. Feel the thenar eminence contract.',
+            climbingDetail: 'Essential for every pinch grip. Recurrent branch emerges just distal to retinaculum.',
+            clinical: 'Recurrent branch laceration destroys opposition. "Ape hand" = thenar wasting.'
         },
         {
-            id: 'thenar',
-            name: 'Thenar Muscles',
-            latin: 'Opponens pollicis, APB, FPB',
-            region: 'Hand (Thenar)',
-            image: IMAGES.hand,
-            credit: 'TeachMeAnatomy',
-            origin: 'Flexor retinaculum, trapezium, scaphoid. Deep head FPB: trapezoid + capitate.',
-            insertion: 'Opponens: 1st MC shaft. APB: lateral proximal phalanx. FPB: proximal phalanx base.',
-            nerve: 'Recurrent branch of median nerve (C8, T1) — "million dollar nerve." Deep head by ulnar.',
-            artery: 'Superficial palmar branch of radial, princeps pollicis artery',
-            actions: 'Opposition (opponens), thumb abduction (APB), thumb MCP flexion (FPB). Enable pincer grip.',
-            climbingCue: 'Pay attention to <strong>thenar muscles during every pinch grip</strong>. Feel the thenar eminence contract forcefully. Opposition brings thumb pad to finger pads.',
-            climbingDetail: 'Essential for every pinch grip. Recurrent branch emerges laterally from median just distal to retinaculum. Form radial wall of carpal tunnel.',
-            clinical: 'Recurrent branch laceration destroys opposition — profound disability. "Ape hand" = thenar wasting + loss of opposition. Test: touch thumb tip to 5th finger.'
-        },
-        {
-            id: 'hypothenar',
-            name: 'Hypothenar Muscles',
-            latin: 'Opponens digiti minimi, ADM, FDM',
-            region: 'Hand (Hypothenar)',
-            image: IMAGES.hand,
-            credit: 'TeachMeAnatomy',
-            origin: 'Flexor retinaculum, hook of hamate, pisiform bone',
-            insertion: 'Opponens: 5th MC shaft. ADM: medial proximal phalanx base. FDM: proximal phalanx base of 5th digit.',
+            id: 'hypothenar', name: 'Hypothenar Muscles', latin: 'Opponens DM, ADM, FDM', type: 'muscle',
+            region: 'Hand (Hypothenar)', image: IMAGES.hand, credit: 'TeachMeAnatomy',
+            origin: 'Flexor retinaculum, hook of hamate, pisiform',
+            insertion: 'Opponens: 5th MC. ADM: medial proximal phalanx. FDM: proximal phalanx base.',
             nerve: 'Deep branch of ulnar nerve (C8, T1)',
             artery: 'Ulnar artery (deep palmar branch)',
-            actions: 'Opposition of 5th digit (opponens), abduction of 5th digit (ADM), flexion of 5th MCP (FDM)',
-            climbingCue: 'Pay attention to <strong>hypothenar muscles during crack climbing and side pulls</strong>. Power the pinky side of grip. Cupping the hand for jams activates these muscles.',
-            climbingDetail: 'Form ulnar border of palm. Work with interossei for small hold precision. Hook of hamate is key landmark — Guyon\'s canal runs alongside it. Active in crack climbing.',
-            clinical: 'Ulnar tunnel syndrome (Guyon\'s canal): ulnar nerve compression at wrist. Cyclists palsy from handlebar pressure. Hook of hamate fractures from direct trauma — pain with gripping.'
+            actions: 'Opposition of 5th digit, abduction, 5th MCP flexion',
+            climbingCue: 'Pay attention to <strong>hypothenar during crack climbing and side pulls</strong>. Power the pinky side.',
+            climbingDetail: 'Form ulnar border of palm. Hook of hamate is key landmark.',
+            clinical: 'Ulnar tunnel syndrome (Guyon\'s canal). Cyclists palsy from handlebar pressure.'
         },
         // === NERVES ===
         {
-            id: 'brachial_plexus',
-            name: 'Brachial Plexus',
-            latin: 'Plexus brachialis',
-            region: 'Nerve (Network)',
-            image: IMAGES.brachial_plexus,
-            credit: 'TeachMeAnatomy',
-            origin: 'Anterior rami of spinal nerves C5, C6, C7, C8, T1',
-            insertion: 'Forms 5 terminal branches: musculocutaneous, axillary, median, radial, ulnar nerves',
-            nerve: 'Components: Roots → Trunks → Divisions → Cords → Branches (mnemonic: "Read That Damn Cadaver Book")',
-            artery: 'Travels with subclavian/axillary artery through neck and axilla',
-            actions: 'Provides ALL motor and most sensory innervation to the upper limb',
-            climbingCue: 'Pay attention to <strong>brachial plexus position during falls</strong>. Shoulder depression + head/neck lateral flexion stretches upper trunk. Burners/stingers from climbing falls.',
-            climbingDetail: 'Source of all upper limb motor control. Upper trunk (C5-C6) most vulnerable in climbing falls. Passes between anterior and middle scalene muscles in neck.',
-            clinical: 'Erb-Duchenne palsy (upper trunk C5-C6): "waiter\'s tip" position — can\'t abduct, flex, or laterally rotate shoulder. Klumpke palsy (lower trunk C8-T1): claw hand + Horner syndrome if T1 sympathetics involved.'
+            id: 'brachial_plexus', name: 'Brachial Plexus', latin: 'Plexus brachialis', type: 'nerve',
+            region: 'Nerve (Network)', image: IMAGES.brachial_plexus, credit: 'TeachMeAnatomy',
+            origin: 'Anterior rami of C5, C6, C7, C8, T1',
+            insertion: 'Forms 5 terminal branches: musculocutaneous, axillary, median, radial, ulnar',
+            nerve: 'Roots → Trunks → Divisions → Cords → Branches',
+            artery: 'Travels with subclavian/axillary artery',
+            actions: 'Provides ALL motor and most sensory innervation to upper limb',
+            climbingCue: 'Pay attention to <strong>brachial plexus during falls</strong>. Shoulder depression + head tilt stretches upper trunk.',
+            climbingDetail: 'Source of all upper limb motor control. Upper trunk most vulnerable in climbing falls.',
+            clinical: 'Erb-Duchenne (C5-C6): "waiter\'s tip." Klumpke (C8-T1): claw hand + Horner.'
         },
         {
-            id: 'median_nerve',
-            name: 'Median Nerve',
-            latin: 'Nervus medianus',
-            region: 'Nerve (Terminal)',
-            image: IMAGES.brachial_plexus,
-            credit: 'TeachMeAnatomy',
-            origin: 'Lateral cord (C5-C7) + Medial cord (C8-T1) contributions',
-            insertion: 'No muscles in arm; all forearm flexors except FCU and medial FDP; thenar muscles; lumbricals 1-2',
-            nerve: 'Passes through carpal tunnel. Branch: Anterior interosseous (pure motor) and Recurrent branch ("million dollar nerve")',
-            artery: 'Travels with brachial artery in arm, then between FDS and FDP in forearm',
-            actions: 'Forearm pronation, wrist/finger flexion (most), thumb opposition, sensation to lateral 3.5 digits',
-            climbingCue: 'Pay attention to <strong>median nerve at the carpal tunnel</strong>. Night numbness in thumb/index/middle fingers = carpal tunnel syndrome. Common in climbers from repetitive gripping.',
-            climbingDetail: 'Crosses elbow superficial to brachialis, deep to bicipital aponeurosis. Key for crimp grip (FDS, FDP to digits 2-3), pinch grip (thenar), and finger dexterity (lumbricals 1-2).',
-            clinical: 'Carpal tunnel syndrome: nocturnal paresthesias, thenar wasting. Tinel at wrist, Phalen test. "Hand of benediction" when making fist (can\'t flex digits 2-3). "Ape hand" = thenar wasting.'
+            id: 'median_nerve', name: 'Median Nerve', latin: 'Nervus medianus', type: 'nerve',
+            region: 'Nerve (Terminal)', image: IMAGES.brachial_plexus, credit: 'TeachMeAnatomy',
+            origin: 'Lateral cord (C5-C7) + Medial cord (C8-T1)',
+            insertion: 'All forearm flexors except FCU/medial FDP; thenar muscles; lumbricals 1-2',
+            nerve: 'Passes through carpal tunnel. Branch: Anterior interosseous, Recurrent branch.',
+            artery: 'Travels with brachial artery in arm',
+            actions: 'Pronation, wrist/finger flexion, thumb opposition, lateral 3.5 digit sensation',
+            climbingCue: 'Pay attention to <strong>median nerve at carpal tunnel</strong>. Night numbness in thumb/index = carpal tunnel.',
+            climbingDetail: 'Key for crimp grip (FDS, FDP 2-3), pinch (thenar), finger dexterity (lumbricals 1-2).',
+            clinical: 'Carpal tunnel: nocturnal paresthesias, thenar wasting. "Hand of benediction" making fist.'
         },
         {
-            id: 'ulnar_nerve',
-            name: 'Ulnar Nerve',
-            latin: 'Nervus ulnaris',
-            region: 'Nerve (Terminal)',
-            image: IMAGES.brachial_plexus,
-            credit: 'TeachMeAnatomy',
-            origin: 'Medial cord of brachial plexus (C8, T1)',
-            insertion: 'FCU, medial FDP (digits 4-5), hypothenar muscles, interossei, lumbricals 3-4, adductor pollicis',
-            nerve: 'Passes posterior to medial epicondyle (cubital tunnel), then through Guyon\'s canal at wrist',
-            artery: 'Travels with ulnar artery in forearm and hand',
-            actions: 'Wrist flexion/adduction, finger abduction/adduction, pinky flexion, thumb adduction',
-            climbingCue: 'Pay attention to <strong>ulnar nerve at the elbow</strong>. "Funny bone" location. Elbow flexion during lock-offs compresses it. Tingling in ring/pinky = cubital tunnel.',
-            climbingDetail: 'Powers finger spread (DAB) and squeeze (PAD) via interossei. Crucial for crack climbing (hypothenar) and pinch grips (adductor pollicis). Ring/pinky grip strength.',
-            clinical: 'Cubital tunnel syndrome: elbow pain, ring/pinky numbness. Claw hand (4th/5th MCP hyperextension). Froment\'s sign: thumb IP flexion when pinching (compensating for weak adductor pollicis).'
+            id: 'ulnar_nerve', name: 'Ulnar Nerve', latin: 'Nervus ulnaris', type: 'nerve',
+            region: 'Nerve (Terminal)', image: IMAGES.brachial_plexus, credit: 'TeachMeAnatomy',
+            origin: 'Medial cord (C8, T1)',
+            insertion: 'FCU, medial FDP, hypothenar, interossei, lumbricals 3-4, adductor pollicis',
+            nerve: 'Passes posterior to medial epicondyle (cubital tunnel), then Guyon\'s canal',
+            artery: 'Travels with ulnar artery',
+            actions: 'Wrist flexion/adduction, finger abduction/adduction, thumb adduction',
+            climbingCue: 'Pay attention to <strong>ulnar nerve at the elbow</strong>. "Funny bone." Elbow flexion during lock-offs compresses it.',
+            climbingDetail: 'Powers finger spread (DAB) and squeeze (PAD). Crucial for crack climbing and pinch grips.',
+            clinical: 'Cubital tunnel syndrome: ring/pinky numbness. Claw hand. Froment\'s sign.'
         },
         {
-            id: 'radial_nerve',
-            name: 'Radial Nerve',
-            latin: 'Nervus radialis',
-            region: 'Nerve (Terminal)',
-            image: IMAGES.brachial_plexus,
-            credit: 'TeachMeAnatomy',
-            origin: 'Posterior cord of brachial plexus (C5, C6, C7, C8, T1)',
-            insertion: 'Triceps, brachioradialis, ECRL, then via posterior interosseous nerve: all extensors',
-            nerve: 'Travels in radial groove with profunda brachii artery, then splits into superficial (sensory) and deep (PIN) branches',
-            artery: 'Accompanies profunda brachii in arm, radial artery distally',
-            actions: 'Elbow extension, wrist extension, finger extension, thumb extension/abduction, supination assist',
-            climbingCue: 'Pay attention to <strong>radial nerve during mantles and presses</strong>. Powers extension. Vulnerable at radial groove — "Saturday night palsy" from arm over chair.',
-            climbingDetail: 'Only nerve supplying posterior arm and forearm. Essential for push movements (mantles, top-outs). Triceps and all extensors. Superficial at radial groove = injury risk.',
-            clinical: 'Wrist drop: can\'t extend wrist/fingers/thumb. Saturday night palsy (compression in radial groove). PIN syndrome: finger drop but wrist extension preserved (ECRL spared).'
-        },
-        {
-            id: 'musculocutaneous',
-            name: 'Musculocutaneous Nerve',
-            latin: 'Nervus musculocutaneus',
-            region: 'Nerve (Terminal)',
-            image: IMAGES.musculocutaneous,
-            credit: 'TeachMeAnatomy',
-            origin: 'Lateral cord of brachial plexus (C5, C6, C7)',
-            insertion: 'Coracobrachialis, biceps brachii, brachialis muscles',
-            nerve: 'Pierces coracobrachialis muscle, runs between biceps and brachialis, continues as lateral cutaneous nerve of forearm',
-            artery: 'Travels with brachial artery in proximal arm',
-            actions: 'Elbow flexion (biceps, brachialis), forearm supination (biceps), weak shoulder flexion, lateral forearm sensation',
-            climbingCue: 'Pay attention to <strong>musculocutaneous nerve during every lock-off</strong>. Powers the anterior arm flexors. If lateral forearm goes numb after hard climbing, could be compression.',
-            climbingDetail: 'Powers both primary elbow flexors (biceps and brachialis). Key for every pulling movement. Coracobrachialis is the landmark — nerve pierces through it.',
-            clinical: 'Injury → severe elbow flexion weakness (lose biceps AND brachialis). Lateral forearm numbness. Weakened biceps reflex. Usually injured with shoulder dislocation.'
-        },
-        {
-            id: 'axillary_nerve',
-            name: 'Axillary Nerve',
-            latin: 'Nervus axillaris',
-            region: 'Nerve (Terminal)',
-            image: IMAGES.shoulder_deltoid,
-            credit: 'TeachMeAnatomy',
-            origin: 'Posterior cord of brachial plexus (C5, C6)',
-            insertion: 'Deltoid muscle, teres minor muscle',
-            nerve: 'Passes through quadrilateral space with posterior circumflex humeral artery, wraps around surgical neck of humerus',
-            artery: 'Travels with posterior circumflex humeral artery',
-            actions: 'Shoulder abduction (deltoid — 15-90°), lateral rotation (teres minor), sensation to "regimental badge" area',
-            climbingCue: 'Pay attention to <strong>axillary nerve during shoulder dislocations</strong>. Most commonly injured nerve in anterior shoulder dislocation. Test sensation before reduction!',
-            climbingDetail: 'Powers deltoid (key for abduction during reaching) and teres minor (external rotation for gastons). At risk in climbing falls with shoulder impact.',
-            clinical: 'Anterior shoulder dislocation or surgical neck fracture → axillary nerve injury. Deltoid paralysis + lateral shoulder numbness ("regimental badge"). Can\'t abduct arm 15-90°.'
+            id: 'radial_nerve', name: 'Radial Nerve', latin: 'Nervus radialis', type: 'nerve',
+            region: 'Nerve (Terminal)', image: IMAGES.brachial_plexus, credit: 'TeachMeAnatomy',
+            origin: 'Posterior cord (C5-T1)',
+            insertion: 'Triceps, brachioradialis, ECRL, then via PIN: all extensors',
+            nerve: 'Travels in radial groove with profunda brachii',
+            artery: 'Accompanies profunda brachii',
+            actions: 'Elbow extension, wrist/finger/thumb extension, supination assist',
+            climbingCue: 'Pay attention to <strong>radial nerve during mantles and presses</strong>. Powers extension. Vulnerable at radial groove.',
+            climbingDetail: 'Only nerve supplying posterior arm/forearm. Essential for push movements.',
+            clinical: 'Wrist drop: can\'t extend wrist/fingers. Saturday night palsy. PIN syndrome: finger drop.'
         },
         // === BLOOD VESSELS ===
         {
-            id: 'axillary_artery',
-            name: 'Axillary Artery',
-            latin: 'Arteria axillaris',
-            region: 'Artery (Shoulder)',
-            image: IMAGES.axillary_artery,
-            credit: 'TeachMeAnatomy',
-            origin: 'Continuation of subclavian artery at lateral border of first rib',
+            id: 'axillary_artery', name: 'Axillary Artery', latin: 'Arteria axillaris', type: 'artery',
+            region: 'Artery (Shoulder)', image: IMAGES.axillary_artery, credit: 'TeachMeAnatomy',
+            origin: 'Continuation of subclavian at lateral border of 1st rib',
             insertion: 'Becomes brachial artery at lower border of teres major',
-            nerve: 'Surrounded by cords of brachial plexus (named by position relative to artery)',
-            artery: 'Branches: Superior thoracic, thoracoacromial, lateral thoracic, subscapular, anterior/posterior circumflex humeral',
-            actions: 'Primary blood supply to shoulder region, anastomotic network around scapula',
-            climbingCue: 'Pay attention to <strong>axillary artery position during shoulder injuries</strong>. Surrounded by brachial plexus cords. Circumflex branches supply shoulder muscles you use constantly.',
-            climbingDetail: 'Subscapular artery is largest branch — supplies lats, serratus, subscapularis. Circumflex humeral arteries form anastomosis around surgical neck. At risk in anterior dislocations.',
-            clinical: 'Axillary artery injury with shoulder dislocation is surgical emergency. Pulseless arm with dislocation = reduce immediately. Aneurysm can compress brachial plexus.'
+            nerve: 'Surrounded by brachial plexus cords',
+            artery: 'Branches: thoracoacromial, subscapular, circumflex humeral',
+            actions: 'Primary blood supply to shoulder region',
+            climbingCue: 'Pay attention to <strong>axillary artery during shoulder injuries</strong>. Surrounded by brachial plexus cords.',
+            climbingDetail: 'Subscapular artery supplies lats, serratus, subscapularis. At risk in dislocations.',
+            clinical: 'Axillary artery injury with dislocation is surgical emergency. Pulseless arm = reduce immediately.'
         },
         {
-            id: 'brachial_artery',
-            name: 'Brachial Artery',
-            latin: 'Arteria brachialis',
-            region: 'Artery (Arm)',
-            image: IMAGES.brachial_artery,
-            credit: 'TeachMeAnatomy',
-            origin: 'Continuation of axillary artery at lower border of teres major',
+            id: 'brachial_artery', name: 'Brachial Artery', latin: 'Arteria brachialis', type: 'artery',
+            region: 'Artery (Arm)', image: IMAGES.brachial_artery, credit: 'TeachMeAnatomy',
+            origin: 'Continuation of axillary at teres major',
             insertion: 'Bifurcates into radial and ulnar arteries in cubital fossa',
-            nerve: 'Median nerve crosses from lateral to medial as artery descends arm',
-            artery: 'Branch: Profunda brachii (with radial nerve in spiral groove). Terminates as radial + ulnar arteries.',
-            actions: 'Primary blood supply to arm and forearm via its terminal branches',
-            climbingCue: 'Pay attention to <strong>brachial artery for blood pressure checks</strong>. Palpable medial to biceps tendon in cubital fossa. Protected by bicipital aponeurosis.',
-            climbingDetail: 'Profunda brachii supplies triceps and accompanies radial nerve. Relationship with median nerve important in cubital fossa. Rich collateral circulation protects arm.',
-            clinical: 'Supracondylar fracture can damage brachial artery → Volkmann\'s ischemic contracture (forearm muscle necrosis, permanent flexion deformity). 5 P\'s of ischemia: Pain, Pallor, Pulselessness, Paresthesia, Paralysis.'
+            nerve: 'Median nerve crosses from lateral to medial',
+            artery: 'Branch: Profunda brachii (with radial nerve)',
+            actions: 'Primary blood supply to arm and forearm',
+            climbingCue: 'Pay attention to <strong>brachial artery for blood pressure checks</strong>. Palpable medial to biceps tendon.',
+            climbingDetail: 'Profunda brachii supplies triceps. Protected by bicipital aponeurosis.',
+            clinical: 'Supracondylar fracture → Volkmann\'s ischemic contracture. 5 P\'s of ischemia.'
         },
         {
-            id: 'radial_ulnar_arteries',
-            name: 'Radial & Ulnar Arteries',
-            latin: 'Arteriae radialis et ulnaris',
-            region: 'Artery (Forearm/Hand)',
-            image: IMAGES.arteries_overview,
-            credit: 'TeachMeAnatomy',
-            origin: 'Terminal bifurcation of brachial artery in cubital fossa',
-            insertion: 'Radial: continues to anatomical snuffbox → deep palmar arch. Ulnar: through Guyon\'s canal → superficial palmar arch.',
-            nerve: 'Radial artery lateral, ulnar artery medial. Ulnar travels with ulnar nerve.',
-            artery: 'Deep and superficial palmar arches interconnect to ensure redundant blood supply to digits',
-            actions: 'Supply forearm muscles and hand. Palmar arches give digital arteries to each finger.',
-            climbingCue: 'Pay attention to <strong>radial artery at the wrist</strong>. Palpate for pulse at anatomical snuffbox or lateral wrist (between FCR and brachioradialis tendons). Standard pulse check.',
-            climbingDetail: 'Allen\'s test: checks patency of both arteries and palmar arch before radial artery procedures. Ulnar artery larger, dominant supply to hand in most people.',
-            clinical: 'Allen\'s test before radial artery catheterization. Radial artery at snuffbox vulnerable in scaphoid fractures. Ulnar artery thrombosis (hypothenar hammer syndrome) from repetitive trauma.'
+            id: 'radial_ulnar_arteries', name: 'Radial & Ulnar Arteries', latin: 'Arteriae radialis et ulnaris', type: 'artery',
+            region: 'Artery (Forearm/Hand)', image: IMAGES.arteries_overview, credit: 'TeachMeAnatomy',
+            origin: 'Terminal bifurcation of brachial artery',
+            insertion: 'Radial: deep palmar arch. Ulnar: superficial palmar arch.',
+            nerve: 'Ulnar travels with ulnar nerve',
+            artery: 'Palmar arches interconnect for redundant digital supply',
+            actions: 'Supply forearm muscles and hand',
+            climbingCue: 'Pay attention to <strong>radial artery at the wrist</strong>. Palpate for pulse at snuffbox.',
+            climbingDetail: 'Allen\'s test checks both arteries. Ulnar artery usually dominant.',
+            clinical: 'Allen\'s test before radial catheterization. Hypothenar hammer syndrome from repetitive trauma.'
         }
     ];
 
+    // ============================================
+    // APP LOGIC
+    // ============================================
     const app = {
-        state: { currentIndex: 0, climbCount: 0, timerInterval: null, timerSeconds: 0, history: [] },
+        state: {
+            currentIndex: 0,
+            climbCount: 0,
+            timerInterval: null,
+            timerSeconds: 0,
+            history: [],
+            viewMode: '3d',
+            preclimbApi: null,
+            restApi: null
+        },
 
         init() {
             this.state.currentIndex = this.getRandomIndex();
@@ -1323,6 +1345,57 @@
             document.getElementById(viewId).classList.add('active');
         },
 
+        toggleView(mode) {
+            this.state.viewMode = mode;
+            document.getElementById('btn-3d').classList.toggle('active', mode === '3d');
+            document.getElementById('btn-2d').classList.toggle('active', mode === '2d');
+            document.getElementById('preclimb-3d-container').style.display = mode === '3d' ? 'block' : 'none';
+            document.getElementById('preclimb-2d-container').style.display = mode === '2d' ? 'flex' : 'none';
+        },
+
+        load3DModel(iframeId, loadingId, structureId) {
+            const mapping = STRUCTURE_MODEL_MAP[structureId];
+            if (!mapping) {
+                document.getElementById(loadingId).innerHTML = '<span>3D model not available</span>';
+                return;
+            }
+
+            const modelData = MODELS_3D[mapping.model];
+            if (!modelData) {
+                document.getElementById(loadingId).innerHTML = '<span>3D model not available</span>';
+                return;
+            }
+
+            const iframe = document.getElementById(iframeId);
+            const loading = document.getElementById(loadingId);
+            loading.classList.remove('hidden');
+
+            const client = new Sketchfab(iframe);
+            client.init(modelData.uid, {
+                success: (api) => {
+                    api.start();
+                    api.addEventListener('viewerready', () => {
+                        loading.classList.add('hidden');
+                        
+                        // Set camera to focus on the specific structure
+                        const cameraPos = modelData.cameras[mapping.camera] || modelData.cameras.default;
+                        if (cameraPos) {
+                            api.setCameraLookAt(cameraPos.eye, cameraPos.target, 1.5);
+                        }
+                    });
+                },
+                error: () => {
+                    loading.innerHTML = '<span>Failed to load 3D model</span>';
+                },
+                autostart: 1,
+                ui_controls: 1,
+                ui_infos: 0,
+                ui_stop: 0,
+                ui_watermark: 0,
+                ui_annotations: 0
+            });
+        },
+
         startClimb() {
             const item = ANATOMY_DB[this.state.currentIndex];
             document.getElementById('preclimb-image').src = item.image;
@@ -1331,6 +1404,13 @@
             document.getElementById('preclimb-action').textContent = item.actions.split('.')[0];
             document.getElementById('preclimb-region').textContent = item.region;
             document.getElementById('preclimb-cue').innerHTML = item.climbingCue;
+            
+            // Reset view to 3D
+            this.toggleView('3d');
+            
+            // Load 3D model
+            this.load3DModel('preclimb-3d-frame', 'preclimb-loading', item.id);
+            
             this.showView('view-preclimb');
         },
 
@@ -1351,10 +1431,14 @@
 
         populateRestView() {
             const item = ANATOMY_DB[this.state.currentIndex];
-            document.getElementById('rest-image').src = item.image;
-            document.getElementById('image-credit').textContent = 'Image: ' + item.credit;
             document.getElementById('rest-title').textContent = item.name;
             document.getElementById('rest-latin').textContent = item.latin;
+            
+            // Set type badge
+            const badge = document.getElementById('rest-type-badge');
+            badge.textContent = item.type.charAt(0).toUpperCase() + item.type.slice(1);
+            badge.className = 'type-badge ' + item.type;
+            
             document.getElementById('rest-origin').textContent = item.origin;
             document.getElementById('rest-insertion').textContent = item.insertion;
             document.getElementById('rest-nerve').textContent = item.nerve;
@@ -1362,13 +1446,19 @@
             document.getElementById('rest-actions').textContent = item.actions;
             document.getElementById('rest-climbing').textContent = item.climbingDetail;
             document.getElementById('rest-clinical').textContent = item.clinical;
+            
+            // Load 3D model for rest view
+            this.load3DModel('rest-3d-frame', 'rest-loading', item.id);
         },
 
         startTimer() {
             this.state.timerSeconds = 0;
             this.updateTimerDisplay();
             if (this.state.timerInterval) clearInterval(this.state.timerInterval);
-            this.state.timerInterval = setInterval(() => { this.state.timerSeconds++; this.updateTimerDisplay(); }, 1000);
+            this.state.timerInterval = setInterval(() => {
+                this.state.timerSeconds++;
+                this.updateTimerDisplay();
+            }, 1000);
         },
 
         updateTimerDisplay() {
@@ -1378,7 +1468,10 @@
         },
 
         stopTimer() {
-            if (this.state.timerInterval) { clearInterval(this.state.timerInterval); this.state.timerInterval = null; }
+            if (this.state.timerInterval) {
+                clearInterval(this.state.timerInterval);
+                this.state.timerInterval = null;
+            }
         },
 
         nextClimb() {
