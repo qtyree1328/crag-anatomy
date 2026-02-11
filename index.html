@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CragAnatomy — Learn While You Climb</title>
+    <meta name="description" content="Study climbing-relevant anatomy during your rest periods. Learn muscle origins, insertions, and climbing applications.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAF8;
+            --card: #FFFFFF;
+            --text: #1A1A1A;
+            --text-secondary: #5A5A5A;
+            --text-muted: #8A8A8A;
+            --accent: #E85D04;
+            --accent-light: #FFF4ED;
+            --accent-dark: #DC4C00;
+            --success: #2D6A4F;
+            --success-light: #D8F3DC;
+            --border: rgba(0,0,0,0.08);
+            --shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+            --serif: 'Fraunces', Georgia, serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Views */
+        .view {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+        }
+
+        .view.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Header */
+        .header {
+            padding: 16px 20px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+        }
+
+        .logo {
+            font-family: var(--serif);
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .session-badge {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .session-badge strong {
+            color: var(--accent);
+            margin-left: 4px;
+        }
+
+        /* Home View */
+        .home-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .hero-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+        }
+
+        .hero-title {
+            font-family: var(--serif);
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 28px;
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .climb-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--sans);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(232, 93, 4, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .climb-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(232, 93, 4, 0.3);
+        }
+
+        .next-up {
+            background: var(--card);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .next-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .next-muscle {
+            font-family: var(--serif);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .next-region {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Pre-Climb View */
+        .preclimb-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .anatomy-hero {
+            position: relative;
+            height: 45%;
+            min-height: 280px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            overflow: hidden;
+        }
+
+        .anatomy-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.95;
+            padding: 16px;
+        }
+
+        .anatomy-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px;
+        }
+
+        .focus-badge {
+            background: rgba(232, 93, 4, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            align-self: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .anatomy-title {
+            font-family: var(--serif);
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .anatomy-latin {
+            font-style: italic;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        .preclimb-info {
+            flex: 1;
+            background: var(--bg);
+            border-radius: var(--radius) var(--radius) 0 0;
+            margin-top: -20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 20px;
+            overflow-y: auto;
+        }
+
+        .quick-facts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .fact-card {
+            background: var(--card);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .fact-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .fact-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .climbing-cue {
+            background: var(--accent-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .cue-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .cue-icon {
+            font-size: 18px;
+        }
+
+        .cue-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-dark);
+        }
+
+        .cue-text {
+            font-size: 15px;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .finish-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--sans);
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .finish-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Rest/Learn View */
+        .rest-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .rest-header {
+            background: var(--success-light);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rest-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rest-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .rest-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+        }
+
+        .rest-timer {
+            font-family: 'DM Sans', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .rest-scroll {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .detail-image-wrap {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 260px;
+        }
+
+        .detail-image {
+            max-width: 100%;
+            max-height: 240px;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .detail-content {
+            padding: 24px 20px;
+        }
+
+        .detail-title {
+            font-family: var(--serif);
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .detail-latin {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title span {
+            font-size: 14px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .info-card {
+            background: var(--card);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .info-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .info-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.45;
+        }
+
+        .highlight-card {
+            background: var(--accent-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            border: 1px solid rgba(232, 93, 4, 0.15);
+        }
+
+        .highlight-card .info-label {
+            color: var(--accent-dark);
+        }
+
+        .clinical-card {
+            background: #FFF5F5;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            border: 1px solid rgba(200, 50, 50, 0.1);
+        }
+
+        .clinical-card .info-label {
+            color: #C53030;
+        }
+
+        .rest-footer {
+            padding: 16px 20px;
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+        }
+
+        .next-climb-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--sans);
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(232, 93, 4, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .next-climb-btn:active {
+            transform: scale(0.98);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: max(16px, env(safe-area-inset-top));
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 10;
+            font-size: 18px;
+        }
+
+        /* Image attribution */
+        .image-credit {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 8px;
+            background: rgba(0,0,0,0.02);
+        }
+
+        .image-credit a {
+            color: var(--text-muted);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Home View -->
+        <div class="view active" id="view-home">
+            <header class="header">
+                <div class="logo">Crag<span>Anatomy</span></div>
+                <div class="session-badge">Climbs:<strong id="climb-count">0</strong></div>
+            </header>
+            
+            <div class="home-content">
+                <div class="hero-card">
+                    <div class="hero-icon">🧗</div>
+                    <h1 class="hero-title">Ready to Climb?</h1>
+                    <p class="hero-subtitle">Learn climbing-relevant anatomy during your rest periods between attempts.</p>
+                    <button class="climb-btn" onclick="app.startClimb()">
+                        <span>Start Climb</span>
+                        <span>→</span>
+                    </button>
+                </div>
+                
+                <div class="next-up">
+                    <div class="next-label">Next Focus Area</div>
+                    <div class="next-muscle" id="next-muscle">Loading...</div>
+                    <div class="next-region" id="next-region"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pre-Climb View -->
+        <div class="view" id="view-preclimb">
+            <button class="back-btn" onclick="app.goHome()">←</button>
+            
+            <div class="preclimb-content">
+                <div class="anatomy-hero">
+                    <img id="preclimb-image" class="anatomy-image" src="" alt="Anatomy illustration">
+                    <div class="anatomy-overlay">
+                        <div class="focus-badge">Focus Area</div>
+                        <h2 class="anatomy-title" id="preclimb-title"></h2>
+                        <p class="anatomy-latin" id="preclimb-latin"></p>
+                    </div>
+                </div>
+                
+                <div class="preclimb-info">
+                    <div class="quick-facts">
+                        <div class="fact-card">
+                            <div class="fact-label">Action</div>
+                            <div class="fact-value" id="preclimb-action"></div>
+                        </div>
+                        <div class="fact-card">
+                            <div class="fact-label">Region</div>
+                            <div class="fact-value" id="preclimb-region"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="climbing-cue">
+                        <div class="cue-header">
+                            <span class="cue-icon">💡</span>
+                            <span class="cue-label">Climbing Cue</span>
+                        </div>
+                        <p class="cue-text" id="preclimb-cue"></p>
+                    </div>
+                    
+                    <button class="finish-btn" onclick="app.finishClimb()">
+                        <span>✓</span>
+                        <span>Finish Climb & Learn More</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rest/Learn View -->
+        <div class="view" id="view-rest">
+            <div class="rest-content">
+                <div class="rest-header">
+                    <div class="rest-status">
+                        <div class="rest-dot"></div>
+                        <span class="rest-label">Rest & Learn</span>
+                    </div>
+                    <div class="rest-timer" id="rest-timer">0:00</div>
+                </div>
+                
+                <div class="rest-scroll">
+                    <div class="detail-image-wrap">
+                        <img id="rest-image" class="detail-image" src="" alt="Anatomy illustration">
+                    </div>
+                    <div class="image-credit" id="image-credit"></div>
+                    
+                    <div class="detail-content">
+                        <h2 class="detail-title" id="rest-title"></h2>
+                        <p class="detail-latin" id="rest-latin"></p>
+                        
+                        <div class="detail-section">
+                            <div class="section-title"><span>📍</span> Attachments</div>
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <div class="info-label">Origin</div>
+                                    <div class="info-value" id="rest-origin"></div>
+                                </div>
+                                <div class="info-card">
+                                    <div class="info-label">Insertion</div>
+                                    <div class="info-value" id="rest-insertion"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title"><span>⚡</span> Innervation & Blood</div>
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <div class="info-label">Nerve</div>
+                                    <div class="info-value" id="rest-nerve"></div>
+                                </div>
+                                <div class="info-card">
+                                    <div class="info-label">Artery</div>
+                                    <div class="info-value" id="rest-artery"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title"><span>🎯</span> Function</div>
+                            <div class="info-card full">
+                                <div class="info-label">Actions</div>
+                                <div class="info-value" id="rest-actions"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title"><span>🧗</span> Climbing Application</div>
+                            <div class="highlight-card">
+                                <div class="info-label">Why Climbers Care</div>
+                                <div class="info-value" id="rest-climbing"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="section-title"><span>⚠️</span> Clinical Note</div>
+                            <div class="clinical-card">
+                                <div class="info-label">Common Injury / Pathology</div>
+                                <div class="info-value" id="rest-clinical"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rest-footer">
+                    <button class="next-climb-btn" onclick="app.nextClimb()">
+                        <span>🧗</span>
+                        <span>Next Climb</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Comprehensive anatomy database with real Wikimedia Commons images
+    const ANATOMY_DB = [
+        {
+            id: 'fdp',
+            name: 'Flexor Digitorum Profundus',
+            latin: 'Musculus flexor digitorum profundus',
+            region: 'Forearm (Deep Anterior)',
+            origin: 'Proximal 3/4 of anterior and medial surfaces of ulna, interosseous membrane',
+            insertion: 'Palmar surfaces of bases of distal phalanges of digits 2-5',
+            nerve: 'Median nerve (anterior interosseous branch for digits 2-3), Ulnar nerve (for digits 4-5)',
+            artery: 'Anterior interosseous artery',
+            actions: 'Flexion of distal interphalangeal joints of digits 2-5. Assists in flexion of proximal interphalangeal and metacarpophalangeal joints. Assists in wrist flexion.',
+            climbingCue: 'Feel this muscle fire when you crimp hard. It\'s the ONLY muscle that can flex your fingertips.',
+            climbingDetail: 'This is the primary crimp muscle. When you curl your fingertips on a hold, FDP is doing the heavy lifting. It\'s also the origin point for the lumbrical muscles, which are crucial for open-hand grips.',
+            clinical: 'Lumbrical Shift Syndrome: When pulling hard on 1-2 fingers (pockets), the lumbrical muscle can get caught between FDP tendons, causing sharp pain in the palm. Also associated with anterior interosseous syndrome affecting thumb and index finger flexion.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Gray417.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        },
+        {
+            id: 'fds',
+            name: 'Flexor Digitorum Superficialis',
+            latin: 'Musculus flexor digitorum superficialis',
+            region: 'Forearm (Intermediate Anterior)',
+            origin: 'Medial epicondyle of humerus, coronoid process of ulna, anterior border of radius',
+            insertion: 'Sides of middle phalanges of digits 2-5 (splits to allow FDP tendons through)',
+            nerve: 'Median nerve (C7, C8, T1)',
+            artery: 'Ulnar artery, radial artery',
+            actions: 'Flexion of proximal interphalangeal joints of digits 2-5. Assists in flexion of metacarpophalangeal joints and wrist.',
+            climbingCue: 'This muscle controls your middle knuckle bend. Feel it working on slopers and open-hand grips.',
+            climbingDetail: 'Works in tandem with FDP for grip strength. On slopers and larger holds where you use an open-hand grip, FDS takes more of the load than in crimping positions. The split insertion ("chiasm of Camper") is an elegant anatomical feature.',
+            clinical: 'Tenosynovitis of FDS tendons can cause trigger finger. FDS testing: hold other fingers extended, flex one PIP joint - this isolates FDS from FDP.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Gray416.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        },
+        {
+            id: 'pulleys',
+            name: 'Annular Pulleys (A2 & A4)',
+            latin: 'Pars anularis vaginae fibrosae',
+            region: 'Hand (Finger)',
+            origin: 'Periosteum of proximal phalanx (A2) and middle phalanx (A4)',
+            insertion: 'Wraps around flexor tendon sheath, forming a ring',
+            nerve: 'N/A (connective tissue structure)',
+            artery: 'Digital arteries',
+            actions: 'Hold flexor tendons close to the phalanges, preventing bowstringing. Critical for mechanical efficiency of finger flexion.',
+            climbingCue: 'These are the "rings" that keep your tendons against the bone. Protect them - they\'re your most vulnerable climbing structure.',
+            climbingDetail: 'A2 pulley (base of proximal phalanx) is the most commonly injured structure in climbing. Full crimping creates massive force vectors that try to pull the tendon away from the bone. A2 rupture = popping sound, swelling, and bowstringing.',
+            clinical: 'A2 pulley rupture is THE classic climbing injury. Grading: partial tear vs complete rupture. Treatment ranges from rest and ring splinting to surgical reconstruction. Prevention: avoid full crimps when possible, especially when fatigued.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/e/ed/Gray423.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        },
+        {
+            id: 'lat',
+            name: 'Latissimus Dorsi',
+            latin: 'Musculus latissimus dorsi',
+            region: 'Back (Superficial)',
+            origin: 'Spinous processes T7-L5, thoracolumbar fascia, iliac crest, inferior 3-4 ribs, inferior angle of scapula',
+            insertion: 'Floor of intertubercular groove of humerus',
+            nerve: 'Thoracodorsal nerve (C6, C7, C8)',
+            artery: 'Thoracodorsal artery',
+            actions: 'Extension, adduction, and medial rotation of arm at shoulder. Depression of scapula. Assists in trunk extension and lateral flexion.',
+            climbingCue: 'Your "wings" - feel them engage on every pull-down. They connect your hands to your hips.',
+            climbingDetail: 'The primary pulling muscle in climbing. Every time you pull down on a hold, your lats are the engine. On steep terrain, they work overtime. Strong lats reduce load on smaller, more injury-prone structures.',
+            clinical: 'Lat tightness limits overhead flexibility and can contribute to shoulder impingement. Can cause compensatory lumbar hyperextension when reaching for high holds if mobility is limited.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/Latissimus_dorsi.PNG',
+            imageCredit: 'Anatomography, CC BY-SA 2.1 JP'
+        },
+        {
+            id: 'brachialis',
+            name: 'Brachialis',
+            latin: 'Musculus brachialis',
+            region: 'Arm (Anterior)',
+            origin: 'Distal half of anterior surface of humerus',
+            insertion: 'Coronoid process and tuberosity of ulna',
+            nerve: 'Musculocutaneous nerve (C5, C6); small contribution from radial nerve',
+            artery: 'Brachial artery, radial recurrent artery',
+            actions: 'Flexion of forearm at elbow (primary flexor regardless of forearm position)',
+            climbingCue: 'The hidden lock-off king. Unlike biceps, it works the same whether palms up, down, or sideways.',
+            climbingDetail: 'More important than biceps for climbing! Brachialis is the pure elbow flexor - it doesn\'t care about forearm rotation. Every lock-off, every pull-up, brachialis is doing major work. It\'s deeper than biceps and often overlooked.',
+            clinical: 'Brachialis tendinopathy causes deep anterior elbow pain, often misdiagnosed as biceps issues. Can be aggravated by repetitive lock-off movements. Forms the floor of the cubital fossa.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/Gray411.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        },
+        {
+            id: 'biceps',
+            name: 'Biceps Brachii',
+            latin: 'Musculus biceps brachii',
+            region: 'Arm (Anterior)',
+            origin: 'Long head: supraglenoid tubercle of scapula. Short head: apex of coracoid process',
+            insertion: 'Radial tuberosity and bicipital aponeurosis into deep fascia of forearm',
+            nerve: 'Musculocutaneous nerve (C5, C6)',
+            artery: 'Brachial artery (muscular branches)',
+            actions: 'Supination of forearm (most powerful), flexion of forearm, assists in shoulder flexion',
+            climbingCue: 'Actually more of a supinator than flexor. Feel it fire when you twist on a sidepull.',
+            climbingDetail: 'While famous, biceps is secondary to brachialis for elbow flexion in climbing. However, its supination power is crucial for sidepulls and underlings where you need to rotate the forearm. The long head tendon is vulnerable to overuse.',
+            clinical: 'Long head biceps tendinopathy: anterior shoulder pain aggravated by overhead reaching. Bicipital aponeurosis protects the median nerve and brachial artery in the cubital fossa.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Gray410.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        },
+        {
+            id: 'supraspinatus',
+            name: 'Supraspinatus',
+            latin: 'Musculus supraspinatus',
+            region: 'Shoulder (Rotator Cuff)',
+            origin: 'Supraspinous fossa of scapula',
+            insertion: 'Superior facet of greater tubercle of humerus',
+            nerve: 'Suprascapular nerve (C5, C6)',
+            artery: 'Suprascapular artery',
+            actions: 'Initiates abduction of arm (first 15°), stabilizes glenohumeral joint, resists inferior translation of humeral head',
+            climbingCue: 'The shoulder stabilizer that starts every reach. It keeps your arm bone in the socket.',
+            climbingDetail: 'Critical for dynamic moves and maintaining shoulder stability during high reaches. The supraspinatus tendon passes through the narrow subacromial space and is vulnerable to impingement, especially with poor scapular mechanics.',
+            clinical: 'Most commonly torn rotator cuff muscle. "Empty can test" for assessment. Subacromial impingement syndrome is common in climbers who don\'t balance pushing exercises or have poor thoracic mobility.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Supraspinatus_muscle_back4.png',
+            imageCredit: 'Anatomography, CC BY-SA 2.1 JP'
+        },
+        {
+            id: 'infraspinatus',
+            name: 'Infraspinatus',
+            latin: 'Musculus infraspinatus',
+            region: 'Shoulder (Rotator Cuff)',
+            origin: 'Infraspinous fossa of scapula',
+            insertion: 'Middle facet of greater tubercle of humerus',
+            nerve: 'Suprascapular nerve (C5, C6)',
+            artery: 'Suprascapular and circumflex scapular arteries',
+            actions: 'Lateral rotation of arm, stabilizes glenohumeral joint',
+            climbingCue: 'The gaston muscle. Feel it fire when you push outward on sidepulls.',
+            climbingDetail: 'Essential for gastons and any move requiring external rotation. Also crucial for decelerating the arm during dynamic moves, preventing anterior shoulder instability. Often weak and overpowered by internal rotators in climbers.',
+            clinical: 'Spinoglenoid notch ganglion cysts can compress the nerve selectively, causing infraspinatus atrophy while sparing supraspinatus. Weakness leads to poor deceleration and increased injury risk.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/f/f1/Infraspinatus_muscle_back3.png',
+            imageCredit: 'Anatomography, CC BY-SA 2.1 JP'
+        },
+        {
+            id: 'rhomboids',
+            name: 'Rhomboid Major & Minor',
+            latin: 'Musculi rhomboidei major et minor',
+            region: 'Back (Deep)',
+            origin: 'Minor: ligamentum nuchae, spinous processes C7-T1. Major: spinous processes T2-T5',
+            insertion: 'Medial border of scapula (from spine to inferior angle)',
+            nerve: 'Dorsal scapular nerve (C5)',
+            artery: 'Dorsal scapular artery',
+            actions: 'Retraction of scapula, elevation of scapula, downward rotation of glenoid cavity',
+            climbingCue: 'Squeeze your shoulder blades together at the bottom of a pull - that\'s your rhomboids.',
+            climbingDetail: 'Critical for scapular stability and proper pulling mechanics. Weak rhomboids lead to "winged" scapulae and poor force transfer. They work with middle trapezius to retract the shoulder blades during lock-offs.',
+            clinical: 'Dorsal scapular nerve entrapment (through middle scalene) causes medial scapular pain and subtle winging. Often misdiagnosed as cervical radiculopathy.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Rhomboideus_major.png',
+            imageCredit: 'Anatomography, CC BY-SA 2.1 JP'
+        },
+        {
+            id: 'serratus',
+            name: 'Serratus Anterior',
+            latin: 'Musculus serratus anterior',
+            region: 'Thorax (Lateral)',
+            origin: 'External surfaces of lateral parts of ribs 1-8 (or 1-9)',
+            insertion: 'Anterior surface of medial border of scapula',
+            nerve: 'Long thoracic nerve (C5, C6, C7)',
+            artery: 'Lateral thoracic artery',
+            actions: 'Protraction of scapula, rotation of scapula (glenoid upward), holds scapula against thoracic wall',
+            climbingCue: 'The "boxer\'s muscle" - fires every time you reach for a distant hold.',
+            climbingDetail: 'Essential for overhead reaching and pressing movements like mantling. Keeps the scapula stable against the ribcage. Weakness causes scapular winging and shoulder dysfunction. Works with trapezius for upward rotation.',
+            clinical: 'Long thoracic nerve is vulnerable (runs superficially on serratus). Damage causes classic winged scapula visible when pushing against a wall. Recovery can take months.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Serratus_anterior.png',
+            imageCredit: 'Anatomography, CC BY-SA 2.1 JP'
+        },
+        {
+            id: 'lumbricals',
+            name: 'Lumbrical Muscles',
+            latin: 'Musculi lumbricales manus',
+            region: 'Hand (Intrinsic)',
+            origin: 'Tendons of flexor digitorum profundus',
+            insertion: 'Lateral sides of extensor expansions of digits 2-5',
+            nerve: 'Lateral two: median nerve. Medial two: ulnar nerve (deep branch)',
+            artery: 'Superficial palmar arch',
+            actions: 'Flex MCP joints while extending IP joints (the "intrinsic plus" position)',
+            climbingCue: 'These tiny muscles let you crimp with straight fingers. They\'re key to the "half-crimp" position.',
+            climbingDetail: 'Unique because they originate from tendons, not bone. Allow the subtle finger positions between full crimp and open hand. Essential for slopers and precision grips. Work with interossei for fine motor control.',
+            clinical: 'Lumbrical shift injury: in 2-finger pockets, differential loading can catch the lumbrical between FDP tendons causing acute palm pain. Pain with resisted finger extension while MCP flexed is diagnostic.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/b/bb/Gray420.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        },
+        {
+            id: 'interossei',
+            name: 'Interossei (Dorsal & Palmar)',
+            latin: 'Musculi interossei dorsales et palmares',
+            region: 'Hand (Intrinsic)',
+            origin: 'Dorsal: adjacent sides of metacarpals. Palmar: palmar surfaces of metacarpals 2, 4, 5',
+            insertion: 'Bases of proximal phalanges and extensor expansions',
+            nerve: 'Ulnar nerve, deep branch (C8, T1)',
+            artery: 'Deep palmar arch',
+            actions: 'Dorsal: abduct fingers (DAB). Palmar: adduct fingers (PAD). Both: flex MCP, extend IP joints',
+            climbingCue: 'DAB = Dorsal ABduct, PAD = Palmar ADduct. These spread and squeeze your fingers on holds.',
+            climbingDetail: 'Critical for pinch grips (adduction) and for spreading fingers on volumes and slopers (abduction). Work with lumbricals for the intrinsic plus position. Weakness = clawing and poor grip control.',
+            clinical: 'Ulnar nerve lesion causes interosseous weakness: Froment\'s sign (compensatory thumb flexion during pinch), positive "card test" (can\'t hold paper between fingers).',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Gray428.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        },
+        {
+            id: 'trapezius',
+            name: 'Trapezius',
+            latin: 'Musculus trapezius',
+            region: 'Back (Superficial)',
+            origin: 'Superior nuchal line, external occipital protuberance, ligamentum nuchae, spinous processes C7-T12',
+            insertion: 'Lateral third of clavicle, acromion, spine of scapula',
+            nerve: 'Spinal accessory nerve (CN XI) for motor; C3-C4 for proprioception',
+            artery: 'Transverse cervical artery',
+            actions: 'Upper fibers: elevate scapula. Middle fibers: retract scapula. Lower fibers: depress scapula. All fibers: rotate glenoid upward.',
+            climbingCue: 'Upper traps shrug, middle traps squeeze shoulder blades, lower traps pull them down. All essential.',
+            climbingDetail: 'The upper trapezius often becomes overactive in climbers, while lower trapezius is neglected. This imbalance contributes to shoulder problems. Lower trap strength is crucial for keeping shoulders down during dead hangs and overhead reaches.',
+            clinical: 'CN XI (spinal accessory) is vulnerable in the posterior triangle of the neck. Damage causes shoulder droop and difficulty raising arm above horizontal.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Muscles_posterior.png',
+            imageCredit: 'Mikael Häggström, Public Domain'
+        },
+        {
+            id: 'triceps',
+            name: 'Triceps Brachii',
+            latin: 'Musculus triceps brachii',
+            region: 'Arm (Posterior)',
+            origin: 'Long head: infraglenoid tubercle of scapula. Lateral head: posterior humerus above radial groove. Medial head: posterior humerus below radial groove',
+            insertion: 'Olecranon process of ulna',
+            nerve: 'Radial nerve (C6, C7, C8)',
+            artery: 'Deep brachial (profunda brachii) artery',
+            actions: 'Extension of forearm at elbow. Long head assists in shoulder extension and adduction.',
+            climbingCue: 'The mantle muscle. Feel it fire when you press out over a ledge or top out.',
+            climbingDetail: 'Essential for mantling, press moves, and controlling descent on down-climbs. The long head also assists the lats in shoulder extension. Often neglected by climbers who focus only on pulling.',
+            clinical: 'Radial nerve runs in the spiral groove with profunda brachii artery. Midshaft humeral fractures can damage both - causing wrist drop and sensation loss on dorsal hand.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Triceps_brachii.png',
+            imageCredit: 'Anatomography, CC BY-SA 2.1 JP'
+        },
+        {
+            id: 'subscapularis',
+            name: 'Subscapularis',
+            latin: 'Musculus subscapularis',
+            region: 'Shoulder (Rotator Cuff)',
+            origin: 'Subscapular fossa (anterior surface of scapula)',
+            insertion: 'Lesser tubercle of humerus',
+            nerve: 'Upper and lower subscapular nerves (C5, C6, C7)',
+            artery: 'Subscapular artery',
+            actions: 'Medial rotation of arm, adduction of arm, stabilizes glenohumeral joint anteriorly',
+            climbingCue: 'The hidden rotator cuff muscle on the front of your shoulder blade. Powers internal rotation.',
+            climbingDetail: 'The largest rotator cuff muscle. Provides anterior stability to the shoulder and powers internal rotation movements. Important for moves requiring inward rotation of the arm. Often tight in climbers, limiting external rotation.',
+            clinical: 'Tested with lift-off test (Gerber) and belly-press test. Subscapularis tears cause weakness in internal rotation and anterior shoulder instability.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Subscapularis.png',
+            imageCredit: 'Anatomography, CC BY-SA 2.1 JP'
+        },
+        {
+            id: 'extensors',
+            name: 'Forearm Extensor Group',
+            latin: 'Musculi extensores antebrachii',
+            region: 'Forearm (Posterior)',
+            origin: 'Lateral epicondyle of humerus (common extensor origin) and posterior forearm',
+            insertion: 'Dorsal aspects of hand, fingers, and thumb',
+            nerve: 'Radial nerve and posterior interosseous nerve (C5-C8)',
+            artery: 'Posterior interosseous artery',
+            actions: 'Extension of wrist and fingers. ECRL/ECRB extend and abduct wrist. ECU extends and adducts wrist.',
+            climbingCue: 'These stabilize your wrist so your flexors can grip. Without them, your grip would collapse.',
+            climbingDetail: 'Often overlooked but crucial. The extensors stabilize the wrist in a slightly extended position, which optimizes finger flexor function. They also prevent finger over-flexion and help you open your hand to grab holds.',
+            clinical: 'Lateral epicondylitis (tennis elbow) affects the common extensor origin. Common in climbers from repetitive gripping. ECRB is most commonly affected.',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Gray419.png',
+            imageCredit: 'Gray\'s Anatomy, Public Domain'
+        }
+    ];
+
+    // App state and controller
+    const app = {
+        state: {
+            currentIndex: 0,
+            climbCount: 0,
+            timerInterval: null,
+            timerSeconds: 0,
+            history: []
+        },
+
+        init() {
+            this.state.currentIndex = this.getRandomIndex();
+            this.updateNextPreview();
+        },
+
+        getRandomIndex() {
+            // Weighted random - avoid recent items
+            const available = [];
+            for (let i = 0; i < ANATOMY_DB.length; i++) {
+                if (!this.state.history.slice(-3).includes(i)) {
+                    available.push(i);
+                }
+            }
+            if (available.length === 0) {
+                available.push(...Array.from({length: ANATOMY_DB.length}, (_, i) => i));
+            }
+            return available[Math.floor(Math.random() * available.length)];
+        },
+
+        updateNextPreview() {
+            const item = ANATOMY_DB[this.state.currentIndex];
+            document.getElementById('next-muscle').textContent = item.name;
+            document.getElementById('next-region').textContent = item.region;
+        },
+
+        showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        },
+
+        startClimb() {
+            const item = ANATOMY_DB[this.state.currentIndex];
+            
+            // Update pre-climb view
+            document.getElementById('preclimb-image').src = item.image;
+            document.getElementById('preclimb-title').textContent = item.name;
+            document.getElementById('preclimb-latin').textContent = item.latin;
+            document.getElementById('preclimb-action').textContent = item.actions.split('.')[0];
+            document.getElementById('preclimb-region').textContent = item.region;
+            document.getElementById('preclimb-cue').textContent = item.climbingCue;
+            
+            this.showView('view-preclimb');
+        },
+
+        finishClimb() {
+            const item = ANATOMY_DB[this.state.currentIndex];
+            
+            // Update rest view
+            document.getElementById('rest-image').src = item.image;
+            document.getElementById('rest-title').textContent = item.name;
+            document.getElementById('rest-latin').textContent = item.latin;
+            document.getElementById('rest-origin').textContent = item.origin;
+            document.getElementById('rest-insertion').textContent = item.insertion;
+            document.getElementById('rest-nerve').textContent = item.nerve;
+            document.getElementById('rest-artery').textContent = item.artery;
+            document.getElementById('rest-actions').textContent = item.actions;
+            document.getElementById('rest-climbing').textContent = item.climbingDetail;
+            document.getElementById('rest-clinical').textContent = item.clinical;
+            document.getElementById('image-credit').innerHTML = `Image: ${item.imageCredit}`;
+            
+            // Start timer
+            this.startTimer();
+            
+            // Track
+            this.state.climbCount++;
+            this.state.history.push(this.state.currentIndex);
+            document.getElementById('climb-count').textContent = this.state.climbCount;
+            
+            this.showView('view-rest');
+        },
+
+        startTimer() {
+            this.state.timerSeconds = 0;
+            this.updateTimerDisplay();
+            
+            if (this.state.timerInterval) {
+                clearInterval(this.state.timerInterval);
+            }
+            
+            this.state.timerInterval = setInterval(() => {
+                this.state.timerSeconds++;
+                this.updateTimerDisplay();
+            }, 1000);
+        },
+
+        updateTimerDisplay() {
+            const mins = Math.floor(this.state.timerSeconds / 60);
+            const secs = this.state.timerSeconds % 60;
+            document.getElementById('rest-timer').textContent = 
+                `${mins}:${secs.toString().padStart(2, '0')}`;
+        },
+
+        stopTimer() {
+            if (this.state.timerInterval) {
+                clearInterval(this.state.timerInterval);
+                this.state.timerInterval = null;
+            }
+        },
+
+        nextClimb() {
+            this.stopTimer();
+            this.state.currentIndex = this.getRandomIndex();
+            this.updateNextPreview();
+            this.startClimb();
+        },
+
+        goHome() {
+            this.stopTimer();
+            this.state.currentIndex = this.getRandomIndex();
+            this.updateNextPreview();
+            this.showView('view-home');
+        }
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        app.init();
+    });
+    </script>
+</body>
+</html>
