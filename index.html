@@ -121,13 +121,12 @@
         }
 
         .hero-icon {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            border-radius: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow-soft);
             overflow: hidden;
-            border: 4px solid var(--surface);
         }
         
         .hero-icon img {
@@ -241,17 +240,19 @@
         .anatomy-visual {
             background: linear-gradient(135deg, #f0ede8 0%, #e5e0d8 100%);
             border-radius: var(--radius);
-            padding: 24px;
+            padding: 16px;
             margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 180px;
+            min-height: 200px;
         }
 
-        .anatomy-visual svg {
-            max-width: 200px;
-            max-height: 160px;
+        .anatomy-visual img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 12px;
         }
 
         .cue-card {
@@ -409,14 +410,25 @@
 
         .rest-visual {
             background: linear-gradient(135deg, #f0ede8 0%, #e5e0d8 100%);
-            padding: 24px;
+            padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .rest-visual svg {
-            max-width: 220px;
-            max-height: 180px;
+        .rest-visual img {
+            max-width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .image-credit {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-align: center;
         }
 
         .rest-details { padding: 20px; }
@@ -556,7 +568,7 @@
                 </div>
             </div>
             <div class="preclimb-scroll">
-                <div class="anatomy-visual" id="preclimb-visual"></div>
+                <div class="anatomy-visual"><img id="preclimb-image" src="" alt="Anatomy"></div>
                 <div class="cue-card">
                     <div class="cue-header">
                         <div class="cue-icon">💡</div>
@@ -591,7 +603,10 @@
                 <div class="rest-timer" id="rest-timer">0:00</div>
             </div>
             <div class="rest-scroll">
-                <div class="rest-visual" id="rest-visual"></div>
+                <div class="rest-visual">
+                    <img id="rest-image" src="" alt="Anatomy">
+                    <div class="image-credit" id="image-credit"></div>
+                </div>
                 <div class="rest-details">
                     <h2 class="rest-title" id="rest-title"></h2>
                     <p class="rest-latin" id="rest-latin"></p>
@@ -671,59 +686,16 @@
     </div>
 
     <script>
-    // SVG illustrations for each muscle
-    const SVGS = {
-        forearm: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="100" cy="40" rx="35" ry="25" fill="#E8D4C4"/>
-            <path d="M65 40 L55 180 Q55 190 65 190 L135 190 Q145 190 145 180 L135 40" fill="#E8D4C4"/>
-            <path d="M75 50 L70 170 Q72 175 80 175 L90 175 Q95 175 93 170 L85 55 Q83 48 75 50Z" fill="#E8927C" opacity="0.8"/>
-            <path d="M95 55 L92 170 Q92 175 100 175 L115 175 Q120 175 118 170 L110 55 Q108 48 95 55Z" fill="#C47A6A" opacity="0.7"/>
-            <text x="100" y="195" text-anchor="middle" fill="#5C5752" font-size="10" font-family="sans-serif">Forearm Flexors</text>
-        </svg>`,
-        
-        back: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="100" cy="30" rx="20" ry="15" fill="#E8D4C4"/>
-            <path d="M60 45 L55 180 Q60 190 100 190 Q140 190 145 180 L140 45 Q130 35 100 35 Q70 35 60 45Z" fill="#E8D4C4"/>
-            <path d="M70 50 L65 90 L85 110 L100 95 L100 50 Q90 45 70 50Z" fill="#E8927C" opacity="0.7"/>
-            <path d="M130 50 L135 90 L115 110 L100 95 L100 50 Q110 45 130 50Z" fill="#E8927C" opacity="0.7"/>
-            <path d="M75 100 L65 170 Q80 180 100 180 Q120 180 135 170 L125 100 Q110 115 100 110 Q90 115 75 100Z" fill="#C47A6A" opacity="0.6"/>
-            <line x1="100" y1="50" x2="100" y2="170" stroke="#8A8580" stroke-width="2" stroke-dasharray="3,3"/>
-            <text x="100" y="195" text-anchor="middle" fill="#5C5752" font-size="10" font-family="sans-serif">Back Muscles</text>
-        </svg>`,
-        
-        arm: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="100" cy="30" rx="40" ry="25" fill="#E8D4C4"/>
-            <path d="M60 30 L55 170 Q60 180 75 180 L125 180 Q140 180 145 170 L140 30" fill="#E8D4C4"/>
-            <path d="M70 40 L68 120 Q70 140 85 140 L95 140 Q105 138 100 120 L90 45 Q85 35 70 40Z" fill="#E8927C" opacity="0.8"/>
-            <path d="M105 45 L100 120 Q102 140 115 140 L125 140 Q135 138 132 120 L125 40 Q120 35 105 45Z" fill="#C47A6A" opacity="0.7"/>
-            <ellipse cx="100" cy="160" rx="30" ry="15" fill="#D4C4A8"/>
-            <text x="100" y="195" text-anchor="middle" fill="#5C5752" font-size="10" font-family="sans-serif">Arm Muscles</text>
-        </svg>`,
-        
-        shoulder: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M60 80 L30 100 Q20 130 40 160 L80 180 L100 180 L100 60 Q80 50 60 80Z" fill="#E8D4C4"/>
-            <path d="M140 80 L170 100 Q180 130 160 160 L120 180 L100 180 L100 60 Q120 50 140 80Z" fill="#E8D4C4"/>
-            <ellipse cx="100" cy="55" rx="25" ry="15" fill="#E8D4C4"/>
-            <path d="M70 70 L55 110 Q60 130 80 140 L95 130 L90 75 Q85 65 70 70Z" fill="#E8927C" opacity="0.7"/>
-            <path d="M130 70 L145 110 Q140 130 120 140 L105 130 L110 75 Q115 65 130 70Z" fill="#E8927C" opacity="0.7"/>
-            <ellipse cx="100" cy="100" rx="20" ry="25" fill="#C47A6A" opacity="0.5"/>
-            <text x="100" y="195" text-anchor="middle" fill="#5C5752" font-size="10" font-family="sans-serif">Shoulder Complex</text>
-        </svg>`,
-        
-        hand: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M60 180 L55 100 Q55 80 70 80 L130 80 Q145 80 145 100 L140 180 Q130 190 100 190 Q70 190 60 180Z" fill="#E8D4C4"/>
-            <rect x="65" y="30" width="12" height="55" rx="6" fill="#E8D4C4"/>
-            <rect x="82" y="20" width="12" height="65" rx="6" fill="#E8D4C4"/>
-            <rect x="99" y="15" width="12" height="70" rx="6" fill="#E8D4C4"/>
-            <rect x="116" y="25" width="12" height="60" rx="6" fill="#E8D4C4"/>
-            <path d="M70 90 L70 120 Q72 130 82 130 L90 130 Q98 130 98 120 L95 95 Q90 85 70 90Z" fill="#E8927C" opacity="0.6"/>
-            <path d="M100 95 L98 130 Q100 140 110 140 L125 140 Q132 138 130 130 L125 95 Q120 88 100 95Z" fill="#C47A6A" opacity="0.5"/>
-            <ellipse cx="75" cy="55" rx="3" ry="4" fill="#C47A6A"/>
-            <ellipse cx="93" cy="48" rx="3" ry="4" fill="#C47A6A"/>
-            <ellipse cx="110" cy="45" rx="3" ry="4" fill="#C47A6A"/>
-            <ellipse cx="125" cy="52" rx="3" ry="4" fill="#C47A6A"/>
-            <text x="100" y="198" text-anchor="middle" fill="#5C5752" font-size="9" font-family="sans-serif">Hand Intrinsics</text>
-        </svg>`
+    // Real anatomy images from TeachMeAnatomy (verified working)
+    const IMAGES = {
+        forearm: 'https://teachmeanatomy.info/wp-content/uploads/Deep-Flexor-Muscles-of-the-Anterior-Forearm-1024x355.png',
+        forearm_superficial: 'https://teachmeanatomy.info/wp-content/uploads/Superficial-Flexor-Muscles-of-the-Anterior-Forearm.png',
+        back: 'https://teachmeanatomy.info/wp-content/uploads/Superficial-Muscles-of-the-Back-857x1024.jpg',
+        arm: 'https://teachmeanatomy.info/wp-content/uploads/Coracobrachialis-Biceps-and-Brachialis-Muscles.jpg',
+        triceps: 'https://teachmeanatomy.info/wp-content/uploads/Long-and-Lateral-Heads-of-the-Triceps-Brachii.jpg',
+        // Using Wikimedia Commons verified working URLs for shoulder/hand
+        shoulder: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Arm_muscles_front_deep.png/300px-Arm_muscles_front_deep.png',
+        hand: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Hand_dissection_1.jpg/300px-Hand_dissection_1.jpg'
     };
 
     const ANATOMY_DB = [
@@ -732,7 +704,8 @@
             name: 'Flexor Digitorum Profundus',
             latin: 'M. flexor digitorum profundus',
             region: 'Forearm',
-            svg: 'forearm',
+            image: IMAGES.forearm,
+            credit: 'TeachMeAnatomy',
             origin: 'Proximal 3/4 of anterior ulna',
             insertion: 'Bases of distal phalanges 2-5',
             nerve: 'Median (2-3), Ulnar (4-5)',
@@ -747,7 +720,8 @@
             name: 'Flexor Digitorum Superficialis',
             latin: 'M. flexor digitorum superficialis',
             region: 'Forearm',
-            svg: 'forearm',
+            image: IMAGES.forearm_superficial,
+            credit: 'TeachMeAnatomy',
             origin: 'Medial epicondyle, coronoid, radius',
             insertion: 'Sides of middle phalanges 2-5',
             nerve: 'Median nerve (C7-T1)',
@@ -762,7 +736,8 @@
             name: 'Latissimus Dorsi',
             latin: 'M. latissimus dorsi',
             region: 'Back',
-            svg: 'back',
+            image: IMAGES.back,
+            credit: 'TeachMeAnatomy',
             origin: 'T7-L5 spinous processes, thoracolumbar fascia, iliac crest',
             insertion: 'Intertubercular groove of humerus',
             nerve: 'Thoracodorsal (C6-C8)',
@@ -777,7 +752,8 @@
             name: 'Brachialis',
             latin: 'M. brachialis',
             region: 'Arm',
-            svg: 'arm',
+            image: IMAGES.arm,
+            credit: 'TeachMeAnatomy',
             origin: 'Distal half of anterior humerus',
             insertion: 'Coronoid process of ulna',
             nerve: 'Musculocutaneous (C5-C6)',
@@ -792,7 +768,8 @@
             name: 'Biceps Brachii',
             latin: 'M. biceps brachii',
             region: 'Arm',
-            svg: 'arm',
+            image: IMAGES.arm,
+            credit: 'TeachMeAnatomy',
             origin: 'Supraglenoid tubercle & coracoid process',
             insertion: 'Radial tuberosity',
             nerve: 'Musculocutaneous (C5-C6)',
@@ -807,7 +784,8 @@
             name: 'Supraspinatus',
             latin: 'M. supraspinatus',
             region: 'Shoulder',
-            svg: 'shoulder',
+            image: IMAGES.shoulder,
+            credit: 'Wikimedia Commons',
             origin: 'Supraspinous fossa',
             insertion: 'Greater tubercle of humerus',
             nerve: 'Suprascapular (C5-C6)',
@@ -822,7 +800,8 @@
             name: 'Infraspinatus',
             latin: 'M. infraspinatus',
             region: 'Shoulder',
-            svg: 'shoulder',
+            image: IMAGES.back,
+            credit: 'TeachMeAnatomy',
             origin: 'Infraspinous fossa',
             insertion: 'Greater tubercle of humerus',
             nerve: 'Suprascapular (C5-C6)',
@@ -837,7 +816,8 @@
             name: 'Trapezius',
             latin: 'M. trapezius',
             region: 'Back',
-            svg: 'back',
+            image: IMAGES.back,
+            credit: 'TeachMeAnatomy',
             origin: 'Skull base, C7-T12 spinous processes',
             insertion: 'Clavicle, acromion, scapular spine',
             nerve: 'Spinal accessory (CN XI)',
@@ -852,7 +832,8 @@
             name: 'Rhomboids',
             latin: 'Mm. rhomboidei',
             region: 'Back',
-            svg: 'back',
+            image: IMAGES.back,
+            credit: 'TeachMeAnatomy',
             origin: 'C7-T5 spinous processes',
             insertion: 'Medial scapular border',
             nerve: 'Dorsal scapular (C5)',
@@ -867,7 +848,8 @@
             name: 'Serratus Anterior',
             latin: 'M. serratus anterior',
             region: 'Thorax',
-            svg: 'shoulder',
+            image: IMAGES.back,
+            credit: 'TeachMeAnatomy',
             origin: 'Ribs 1-8',
             insertion: 'Medial scapular border (anterior)',
             nerve: 'Long thoracic (C5-C7)',
@@ -882,7 +864,8 @@
             name: 'Lumbricals',
             latin: 'Mm. lumbricales',
             region: 'Hand',
-            svg: 'hand',
+            image: IMAGES.hand,
+            credit: 'Wikimedia Commons',
             origin: 'FDP tendons',
             insertion: 'Extensor expansions 2-5',
             nerve: 'Median (1-2), Ulnar (3-4)',
@@ -897,7 +880,8 @@
             name: 'Triceps Brachii',
             latin: 'M. triceps brachii',
             region: 'Arm',
-            svg: 'arm',
+            image: IMAGES.triceps,
+            credit: 'TeachMeAnatomy',
             origin: 'Infraglenoid tubercle & posterior humerus',
             insertion: 'Olecranon',
             nerve: 'Radial (C6-C8)',
@@ -938,7 +922,7 @@
 
         startClimb() {
             const item = ANATOMY_DB[this.state.currentIndex];
-            document.getElementById('preclimb-visual').innerHTML = SVGS[item.svg];
+            document.getElementById('preclimb-image').src = item.image;
             document.getElementById('preclimb-title').textContent = item.name;
             document.getElementById('preclimb-latin').textContent = item.latin;
             document.getElementById('preclimb-action').textContent = item.actions.split('.')[0];
@@ -964,7 +948,8 @@
 
         populateRestView() {
             const item = ANATOMY_DB[this.state.currentIndex];
-            document.getElementById('rest-visual').innerHTML = SVGS[item.svg];
+            document.getElementById('rest-image').src = item.image;
+            document.getElementById('image-credit').textContent = 'Image: ' + item.credit;
             document.getElementById('rest-title').textContent = item.name;
             document.getElementById('rest-latin').textContent = item.latin;
             document.getElementById('rest-origin').textContent = item.origin;
