@@ -970,6 +970,36 @@
             }
         },
         
+        // Individual muscle models (Anatomary collection - more accurate)
+        triceps_model: {
+            uid: '2d448e5749ec4d77b65c57b26e32312b',
+            name: 'Triceps Brachii',
+            credit: 'Anatomary',
+            cameras: {
+                default: { eye: [0.3, 0, 0.3], target: [0, 0, 0] }
+            }
+        },
+        
+        biceps_model: {
+            uid: '40b94cb7af854a669f0d6123bc7b7540',
+            name: 'Biceps Brachii',
+            credit: 'roundflat',
+            cameras: {
+                default: { eye: [0.3, 0, 0.3], target: [0, 0, 0] }
+            }
+        },
+        
+        biceps_triceps: {
+            uid: '1f23b4ee5a1f4703b15a939412837638',
+            name: 'Biceps and Triceps',
+            credit: 'chrishammang',
+            cameras: {
+                default: { eye: [0.4, 0.1, 0.4], target: [0, 0, 0] },
+                biceps: { eye: [0.3, 0.1, 0.3], target: [0, 0.05, 0] },
+                triceps: { eye: [-0.3, 0.1, 0.3], target: [0, 0.05, 0] }
+            }
+        },
+        
         // === LOWER BODY MODELS ===
         
         // Gluteus Maximus
@@ -1039,10 +1069,10 @@
         teres_minor: { model: 'shoulder_joint', camera: 'rotator_cuff', annotationTerms: ['teres minor'] },
         teres_major: { model: 'shoulder_arm', camera: 'lat', annotationTerms: ['teres major'] },
         
-        // Arm
-        biceps: { model: 'shoulder_arm', camera: 'biceps', annotationTerms: ['biceps', 'bicep'] },
+        // Arm - using dedicated individual muscle models for accuracy
+        biceps: { model: 'biceps_triceps', camera: 'biceps', annotationTerms: ['biceps', 'bicep'] },
         brachialis: { model: 'shoulder_arm', camera: 'brachialis', annotationTerms: ['brachialis'] },
-        triceps: { model: 'shoulder_arm', camera: 'triceps', annotationTerms: ['triceps', 'tricep'] },
+        triceps: { model: 'triceps_model', camera: 'default', annotationTerms: ['triceps', 'tricep'] },
         coracobrachialis: { model: 'shoulder_arm', camera: 'biceps', annotationTerms: ['coracobrachialis'] },
         
         // Forearm
