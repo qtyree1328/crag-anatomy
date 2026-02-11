@@ -748,11 +748,11 @@
             </div>
             <div class="preclimb-scroll">
                 <div class="view-toggle">
-                    <button class="view-toggle-btn active" id="btn-3d" onclick="app.toggleView('3d')">🔬 3D Model</button>
-                    <button class="view-toggle-btn" id="btn-2d" onclick="app.toggleView('2d')">📷 Image</button>
+                    <button class="view-toggle-btn" id="btn-3d" onclick="app.toggleView('3d')">🔬 3D Model</button>
+                    <button class="view-toggle-btn active" id="btn-2d" onclick="app.toggleView('2d')">📷 Image</button>
                 </div>
                 
-                <div class="viewer-3d-container" id="preclimb-3d-container">
+                <div class="viewer-3d-container" id="preclimb-3d-container" style="display: none;">
                     <div class="viewer-loading" id="preclimb-loading">
                         <div class="loading-spinner"></div>
                         <span>Loading 3D Model...</span>
@@ -761,7 +761,7 @@
                     <div class="viewer-badge">Interactive 3D</div>
                 </div>
                 
-                <div class="anatomy-visual" id="preclimb-2d-container" style="display: none;">
+                <div class="anatomy-visual" id="preclimb-2d-container" style="display: flex;">
                     <img id="preclimb-image" src="" alt="Anatomy">
                 </div>
                 
@@ -902,7 +902,7 @@
                 trapezius: { eye: [-0.3, 0.4, -0.4], target: [0, 0.2, 0] },
                 deltoid: { eye: [0.4, 0.3, 0.3], target: [0.1, 0.2, 0] },
                 biceps: { eye: [0.3, 0, 0.4], target: [0.1, -0.1, 0] },
-                triceps: { eye: [-0.3, 0, 0.4], target: [-0.1, -0.1, 0] },
+                triceps: { eye: [-0.5, 0.1, -0.3], target: [0, 0, 0] },
                 brachialis: { eye: [0.25, -0.1, 0.35], target: [0.1, -0.15, 0] },
                 forearm: { eye: [0.2, -0.3, 0.4], target: [0.1, -0.3, 0] }
             }
@@ -1677,7 +1677,7 @@
             timerInterval: null,
             timerSeconds: 0,
             history: [],
-            viewMode: '3d',
+            viewMode: '2d',
             preclimbApi: null,
             restApi: null,
             region: 'all' // 'all', 'upper', 'lower'
@@ -1791,10 +1791,10 @@
             document.getElementById('preclimb-region').textContent = item.region;
             document.getElementById('preclimb-cue').innerHTML = item.climbingCue;
             
-            // Reset view to 3D
-            this.toggleView('3d');
+            // Default to 2D image view
+            this.toggleView('2d');
             
-            // Load 3D model
+            // Preload 3D model in background so it's ready when user switches
             this.load3DModel('preclimb-3d-frame', 'preclimb-loading', item.id);
             
             this.showView('view-preclimb');
