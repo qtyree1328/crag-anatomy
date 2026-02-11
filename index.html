@@ -154,6 +154,36 @@
             max-width: 260px;
         }
 
+        .region-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+        
+        .region-btn {
+            padding: 10px 18px;
+            background: var(--surface);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .region-btn.active {
+            background: var(--sage-soft);
+            border-color: var(--sage);
+            color: var(--sage);
+        }
+        
+        .region-btn:not(.active):hover {
+            border-color: var(--text-muted);
+        }
+
         .climb-btn {
             width: 100%;
             padding: 20px;
@@ -692,6 +722,11 @@
                     <div class="hero-icon"><img src="https://media.istockphoto.com/id/485407337/photo/human-anatomy-model.jpg?s=612x612&w=0&k=20&c=xDE9nXiNdsniWdtcqHX9yErSUcfBgTMIjX-kODOFiMw=" alt="Anatomy"></div>
                     <h1 class="hero-title">Ready to Climb?</h1>
                     <p class="hero-subtitle">Learn climbing anatomy with interactive 3D models during rest periods.</p>
+                </div>
+                <div class="region-filter">
+                    <button class="region-btn active" data-region="all" onclick="app.setRegion('all')">🏔️ All</button>
+                    <button class="region-btn" data-region="upper" onclick="app.setRegion('upper')">💪 Upper</button>
+                    <button class="region-btn" data-region="lower" onclick="app.setRegion('lower')">🦵 Lower</button>
                 </div>
                 <button class="climb-btn" onclick="app.startClimb()">Start Climb →</button>
                 <div class="next-card">
@@ -1630,6 +1665,11 @@
     // ============================================
     // APP LOGIC
     // ============================================
+    // Upper body regions (original 24 structures)
+    const UPPER_BODY_REGIONS = ['Back', 'Shoulder', 'Arm', 'Forearm', 'Hand', 'Nerve', 'Artery'];
+    // Lower body regions (new 19 structures)
+    const LOWER_BODY_REGIONS = ['Hip', 'Thigh', 'Leg', 'Foot'];
+    
     const app = {
         state: {
             currentIndex: 0,
@@ -1639,7 +1679,8 @@
             history: [],
             viewMode: '3d',
             preclimbApi: null,
-            restApi: null
+            restApi: null,
+            region: 'all' // 'all', 'upper', 'lower'
         },
 
         init() {
@@ -1647,12 +1688,36 @@
             this.updateNextPreview();
         },
 
-        getRandomIndex() {
-            const available = [];
+        setRegion(region) {
+            this.state.region = region;
+            document.querySelectorAll('.region-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.region === region);
+            });
+            this.state.currentIndex = this.getRandomIndex();
+            this.updateNextPreview();
+        },
+
+        getFilteredIndices() {
+            const filtered = [];
             for (let i = 0; i < ANATOMY_DB.length; i++) {
-                if (!this.state.history.slice(-5).includes(i)) available.push(i);
+                const item = ANATOMY_DB[i];
+                const region = item.region.split(' ')[0]; // Get first word (e.g., "Hip" from "Hip (Gluteal)")
+                
+                if (this.state.region === 'all') {
+                    filtered.push(i);
+                } else if (this.state.region === 'upper') {
+                    if (UPPER_BODY_REGIONS.some(r => item.region.includes(r))) filtered.push(i);
+                } else if (this.state.region === 'lower') {
+                    if (LOWER_BODY_REGIONS.some(r => item.region.includes(r))) filtered.push(i);
+                }
             }
-            return available.length ? available[Math.floor(Math.random() * available.length)] : Math.floor(Math.random() * ANATOMY_DB.length);
+            return filtered;
+        },
+
+        getRandomIndex() {
+            const filtered = this.getFilteredIndices();
+            const available = filtered.filter(i => !this.state.history.slice(-5).includes(i));
+            return available.length ? available[Math.floor(Math.random() * available.length)] : filtered[Math.floor(Math.random() * filtered.length)];
         },
 
         updateNextPreview() {
