@@ -889,8 +889,13 @@
     // ============================================
     // 3D MODEL REGISTRY - Sketchfab Models
     // ============================================
+    // ============================================
+    // VERIFIED 3D MODELS - Each structure gets a dedicated model
+    // Using Anatomary collection (individual muscles on skeleton)
+    // + specialty models for nerves/arteries/composite structures
+    // ============================================
     const MODELS_3D = {
-        // Upper Limb - SGU Medical Art (professional medical models)
+        // === LEGACY COMPOSITE MODELS (kept for nerves/arteries/hands) ===
         shoulder_arm: {
             uid: '6dd851d018f34892800b83ca418ccb52',
             name: 'Muscles of the Shoulder, Arm, Forearm',
@@ -1049,86 +1054,156 @@
                 adductors: { eye: [0.4, 0, 0.3], target: [0, 0.1, 0] },
                 calf: { eye: [0, -0.2, 0.4], target: [0, -0.2, 0] }
             }
-        }
-    };
-
-    // Structure to 3D model mapping with annotation search terms
-    const STRUCTURE_MODEL_MAP = {
-        // Back muscles
-        lat: { model: 'shoulder_arm', camera: 'lat', annotationTerms: ['latissimus', 'lat'] },
-        trapezius: { model: 'shoulder_arm', camera: 'trapezius', annotationTerms: ['trapezius', 'trap'] },
-        rhomboids: { model: 'shoulder_arm', camera: 'trapezius', annotationTerms: ['rhomboid'] },
-        serratus: { model: 'shoulder_arm', camera: 'lat', annotationTerms: ['serratus'] },
-        levator: { model: 'shoulder_arm', camera: 'trapezius', annotationTerms: ['levator'] },
+        },
+        
+        // ============================================
+        // ANATOMARY INDIVIDUAL MUSCLE MODELS
+        // Each shows ONE muscle on a skeleton = zero ambiguity
+        // ============================================
+        
+        // Back
+        anat_lat: { uid: 'fa2ca759f6a24738be744aaaf2ed9b5f', name: 'Latissimus Dorsi', credit: 'Anatomary', cameras: { default: { eye: [-0.4, 0.2, -0.3], target: [0, 0.1, 0] } } },
+        anat_trapezius: { uid: '566cf6b9815e42638c235e7e0b42170c', name: 'Trapezius', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.4, -0.4], target: [0, 0.2, 0] } } },
+        anat_rhomboid_major: { uid: 'afe1f2a8cecb4558bbf012c241588cc2', name: 'Rhomboid Major', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.3, -0.3], target: [0, 0.2, 0] } } },
+        anat_serratus: { uid: '18e4593f454641be8432c604ad29e9b5', name: 'Serratus Anterior', credit: 'Anatomary', cameras: { default: { eye: [0.4, 0.2, 0.3], target: [0, 0.1, 0] } } },
+        anat_levator: { uid: 'c9ba26838feb4cc0a7a4f8f62d451282', name: 'Levator Scapulae', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.4, -0.3], target: [0, 0.3, 0] } } },
+        anat_erector: { uid: 'e5f0faac281444e8ae11d4d1d4af0d03', name: 'Erector Spinae', credit: 'Anatomary', cameras: { default: { eye: [-0.4, 0.2, -0.3], target: [0, 0, 0] } } },
         
         // Shoulder
-        supraspinatus: { model: 'shoulder_joint', camera: 'supraspinatus', annotationTerms: ['supraspinatus'] },
-        infraspinatus: { model: 'shoulder_joint', camera: 'rotator_cuff', annotationTerms: ['infraspinatus'] },
-        subscapularis: { model: 'shoulder_joint', camera: 'subscapularis', annotationTerms: ['subscapularis'] },
-        deltoid: { model: 'shoulder_arm', camera: 'deltoid', annotationTerms: ['deltoid'] },
-        teres_minor: { model: 'shoulder_joint', camera: 'rotator_cuff', annotationTerms: ['teres minor'] },
-        teres_major: { model: 'shoulder_arm', camera: 'lat', annotationTerms: ['teres major'] },
+        anat_supraspinatus: { uid: '1e83656c583a4aada3b8bfe93e2355c5', name: 'Supraspinatus', credit: 'Anatomary', cameras: { default: { eye: [0, 0.4, 0.3], target: [0, 0.2, 0] } } },
+        anat_infraspinatus: { uid: 'e4796252a4ca4cbe94dcd3f2587ca5ab', name: 'Infraspinatus', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.3, -0.3], target: [0, 0.2, 0] } } },
+        anat_subscapularis: { uid: '8d6d1cbcb6374f0999a2e4087c2a7428', name: 'Subscapularis', credit: 'Anatomary', cameras: { default: { eye: [0.4, 0.2, 0.3], target: [0, 0.2, 0] } } },
+        anat_deltoid: { uid: '759009c34c954b2d9c19b311409933cd', name: 'Deltoids', credit: 'Anatomary', cameras: { default: { eye: [0.4, 0.3, 0.3], target: [0, 0.2, 0] } } },
+        anat_teres_minor: { uid: '6294f21f7ab34820837fad9408ca6709', name: 'Teres Minor', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.3, -0.3], target: [0, 0.2, 0] } } },
+        anat_teres_major: { uid: '6644b6a7ed11476cb39e6023be5a34c8', name: 'Teres Major', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.2, -0.3], target: [0, 0.1, 0] } } },
         
-        // Arm - using dedicated individual muscle models for accuracy
-        biceps: { model: 'biceps_triceps', camera: 'biceps', annotationTerms: ['biceps', 'bicep'] },
-        brachialis: { model: 'shoulder_arm', camera: 'brachialis', annotationTerms: ['brachialis'] },
-        triceps: { model: 'triceps_model', camera: 'default', annotationTerms: ['triceps', 'tricep'] },
-        coracobrachialis: { model: 'shoulder_arm', camera: 'biceps', annotationTerms: ['coracobrachialis'] },
+        // Arm
+        anat_biceps: { uid: '85fb3e1b8c864ee18b42a1e4c55d53e7', name: 'Biceps Brachii', credit: 'Anatomary', cameras: { default: { eye: [0.3, 0.1, 0.3], target: [0, 0, 0] } } },
+        anat_triceps: { uid: '2d448e5749ec4d77b65c57b26e32312b', name: 'Triceps Brachii', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.1, 0.3], target: [0, 0, 0] } } },
+        anat_brachialis: { uid: '08a993c07efd417188a005f21cc93d36', name: 'Brachialis', credit: 'Anatomary', cameras: { default: { eye: [0.25, 0, 0.35], target: [0, -0.1, 0] } } },
+        anat_coracobrachialis: { uid: '00f5a805b50f4a85b5628daa9b24a6b0', name: 'Coracobrachialis', credit: 'Anatomary', cameras: { default: { eye: [0.3, 0.1, 0.3], target: [0, 0.05, 0] } } },
         
         // Forearm
-        fdp: { model: 'hand_forearm', camera: 'fdp', annotationTerms: ['flexor digitorum profundus', 'fdp', 'profundus'] },
-        fds: { model: 'hand_forearm', camera: 'fds', annotationTerms: ['flexor digitorum superficialis', 'fds', 'superficialis'] },
-        pronator_teres: { model: 'hand_forearm', camera: 'fds', annotationTerms: ['pronator teres', 'pronator'] },
-        fpl: { model: 'hand_forearm', camera: 'thenar', annotationTerms: ['flexor pollicis', 'fpl'] },
-        brachioradialis: { model: 'shoulder_arm', camera: 'forearm', annotationTerms: ['brachioradialis'] },
-        extensors: { model: 'shoulder_arm', camera: 'forearm', annotationTerms: ['extensor', 'wrist extensor'] },
+        anat_fdp: { uid: '194c34d962f4446ba55229d12543b7e3', name: 'Flexor Digitorum Profundus', credit: 'Anatomary', cameras: { default: { eye: [0.2, -0.1, 0.3], target: [0, -0.2, 0] } } },
+        anat_fds: { uid: '1f07ad88c0bc44deb41088c6262b83c9', name: 'Flexor Digitorum Superficialis', credit: 'Anatomary', cameras: { default: { eye: [0.2, -0.1, 0.3], target: [0, -0.2, 0] } } },
+        anat_pronator: { uid: '66c2117e1be94b37878e10f499eb7d1c', name: 'Pronator Teres', credit: 'Anatomary', cameras: { default: { eye: [0.25, -0.05, 0.3], target: [0, -0.1, 0] } } },
+        anat_fpl: { uid: '97078b3f8a2241cabb86597458400135', name: 'Flexor Pollicis Longus', credit: 'Anatomary', cameras: { default: { eye: [0.2, -0.15, 0.25], target: [0, -0.2, 0] } } },
+        anat_brachioradialis: { uid: 'ca285c324d2d4a9c844c3bdd7629e39e', name: 'Brachioradialis', credit: 'Anatomary', cameras: { default: { eye: [0.25, -0.1, 0.3], target: [0, -0.15, 0] } } },
+        anat_ext_digitorum: { uid: 'cbb8c32d71fb4f5b8f313b71959004d6', name: 'Extensor Digitorum', credit: 'Anatomary', cameras: { default: { eye: [-0.2, -0.1, 0.3], target: [0, -0.15, 0] } } },
         
         // Hand
-        lumbricals: { model: 'hand_forearm', camera: 'lumbricals', annotationTerms: ['lumbrical'] },
-        interossei: { model: 'hand_forearm', camera: 'interossei', annotationTerms: ['inteross', 'interosseous'] },
-        pulleys: { model: 'carpal_tunnel', camera: 'pulleys', annotationTerms: ['pulley', 'annular', 'a2', 'a4'] },
-        thenar: { model: 'hand_forearm', camera: 'thenar', annotationTerms: ['thenar', 'opponens pollicis', 'abductor pollicis'] },
-        hypothenar: { model: 'hand_forearm', camera: 'hypothenar', annotationTerms: ['hypothenar', 'digiti minimi'] },
+        anat_lumbricals: { uid: 'c151c93cfd67492bbecc3584745a097c', name: 'Lumbricals', credit: 'Anatomary', cameras: { default: { eye: [0.1, -0.2, 0.15], target: [0, -0.25, 0] } } },
+        anat_palmar_interossei: { uid: 'bcf40a557f6344a6ab40b2f2310cc7f2', name: 'Palmar Interossei', credit: 'Anatomary', cameras: { default: { eye: [0.1, -0.2, 0.15], target: [0, -0.25, 0] } } },
+        anat_opponens_pollicis: { uid: '74f59b2276c3489e8dfd1902b9e4bbc1', name: 'Opponens Pollicis', credit: 'Anatomary', cameras: { default: { eye: [0.15, -0.2, 0.15], target: [0.05, -0.25, 0] } } },
+        anat_abd_digiti_minimi: { uid: '10e5b5cc995a4540abbf5a0d73debb82', name: 'Abductor Digiti Minimi (Hand)', credit: 'Anatomary', cameras: { default: { eye: [-0.1, -0.2, 0.15], target: [-0.05, -0.25, 0] } } },
         
-        // Nerves
-        brachial_plexus: { model: 'brachial_plexus', camera: 'default', annotationTerms: ['plexus', 'roots', 'trunks', 'cords'] },
-        median_nerve: { model: 'carpal_tunnel', camera: 'default', annotationTerms: ['median'] },
-        ulnar_nerve: { model: 'hand_forearm', camera: 'hypothenar', annotationTerms: ['ulnar'] },
-        radial_nerve: { model: 'shoulder_arm', camera: 'triceps', annotationTerms: ['radial'] },
-        musculocutaneous: { model: 'shoulder_arm', camera: 'biceps', annotationTerms: ['musculocutaneous'] },
-        axillary_nerve: { model: 'shoulder_joint', camera: 'default', annotationTerms: ['axillary'] },
-        
-        // Arteries
-        axillary_artery: { model: 'shoulder_arm', camera: 'default', annotationTerms: ['axillary artery'] },
-        brachial_artery: { model: 'shoulder_arm', camera: 'biceps', annotationTerms: ['brachial artery'] },
-        radial_ulnar_arteries: { model: 'hand_forearm', camera: 'default', annotationTerms: ['radial artery', 'ulnar artery'] },
-        
-        // === LOWER BODY ===
         // Hip & Gluteal
-        glute_max: { model: 'gluteus_maximus', camera: 'default', annotationTerms: ['gluteus maximus', 'glute max'] },
-        glute_med: { model: 'gluteus_medius', camera: 'default', annotationTerms: ['gluteus medius', 'glute med'] },
-        glute_min: { model: 'gluteus_medius', camera: 'default', annotationTerms: ['gluteus minimus', 'glute min'] },
-        piriformis: { model: 'gluteus_maximus', camera: 'lateral', annotationTerms: ['piriformis'] },
-        deep_rotators: { model: 'gluteus_maximus', camera: 'lateral', annotationTerms: ['obturator', 'gemelli', 'quadratus femoris'] },
-        iliopsoas: { model: 'leg_muscles', camera: 'default', annotationTerms: ['iliopsoas', 'psoas', 'iliacus'] },
+        anat_glute_max: { uid: '537556cb8be54bf58d1defa95b8958aa', name: 'Gluteus Maximus', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.2, 0.5], target: [0, 0, 0] } } },
+        anat_glute_med: { uid: '17f9fd854c5342dd9ecd59ff9466af42', name: 'Gluteus Medius', credit: 'Anatomary', cameras: { default: { eye: [0.4, 0.2, 0.4], target: [0, 0, 0] } } },
+        anat_glute_min: { uid: '75a27fc8ae5343d9a08053ed5f0ef351', name: 'Gluteus Minimus', credit: 'Anatomary', cameras: { default: { eye: [0.4, 0.2, 0.4], target: [0, 0, 0] } } },
+        anat_piriformis: { uid: '0c9bde73731c4404a78f16c8dd20f3b9', name: 'Piriformis', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.1, 0.4], target: [0, 0, 0] } } },
+        anat_obturator: { uid: 'c095357b78d54d61829a06822027b0ef', name: 'Obturator Internus', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0.1, 0.4], target: [0, 0, 0] } } },
+        anat_quadratus_femoris: { uid: '7ebe0f3d82264b8bbfdb14e3b5fc0a4d', name: 'Quadratus Femoris', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0, 0.4], target: [0, -0.05, 0] } } },
+        anat_iliopsoas: { uid: 'a933917b6d3c43dc89c9e1fa92c1a59a', name: 'Iliopsoas', credit: 'Anatomary', cameras: { default: { eye: [0.4, 0.1, 0.4], target: [0, 0, 0] } } },
         
         // Thigh
-        quadriceps: { model: 'leg_muscles', camera: 'quadriceps', annotationTerms: ['quadriceps', 'rectus femoris', 'vastus'] },
-        sartorius: { model: 'leg_muscles', camera: 'quadriceps', annotationTerms: ['sartorius'] },
-        adductors: { model: 'leg_muscles', camera: 'adductors', annotationTerms: ['adductor', 'gracilis', 'pectineus'] },
-        hamstrings: { model: 'leg_muscles', camera: 'hamstrings', annotationTerms: ['hamstring', 'biceps femoris', 'semitendinosus', 'semimembranosus'] },
+        anat_rectus_femoris: { uid: '38264a1751534090875f9c3ef273d072', name: 'Rectus Femoris', credit: 'Anatomary', cameras: { default: { eye: [0, 0, 0.5], target: [0, -0.2, 0] } } },
+        anat_sartorius: { uid: 'c0f6fe6d35ca4096b56bb5eec976bdb5', name: 'Sartorius', credit: 'Anatomary', cameras: { default: { eye: [0.3, 0, 0.4], target: [0, -0.1, 0] } } },
+        anat_adductor_longus: { uid: '39729159b6d34c32a8ccc41b1a296c40', name: 'Adductor Longus', credit: 'Anatomary', cameras: { default: { eye: [0.3, 0, 0.4], target: [0, -0.1, 0] } } },
+        anat_adductor_magnus: { uid: 'ccd5e7f094ab442782b66f4f61843236', name: 'Adductor Magnus', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0, 0.4], target: [0, -0.1, 0] } } },
+        anat_gracilis: { uid: 'e22d99dd38e749dc83d77b212a111b08', name: 'Gracilis', credit: 'Anatomary', cameras: { default: { eye: [0.3, 0, 0.4], target: [0, -0.15, 0] } } },
+        anat_biceps_femoris: { uid: '91fdbeeef14943968a4facf24bc8c148', name: 'Biceps Femoris (Long Head)', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0, 0.4], target: [0, -0.1, 0] } } },
+        anat_semimembranosus: { uid: '82b31287b0aa4d168ef53195fd3121e4', name: 'Semimembranosus', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0, 0.4], target: [0, -0.15, 0] } } },
+        anat_semitendinosus: { uid: 'aa1ef4b100274b28bb9a51193f28c2ba', name: 'Semitendinosus', credit: 'Anatomary', cameras: { default: { eye: [-0.3, 0, 0.4], target: [0, -0.15, 0] } } },
         
         // Leg & Ankle
-        tibialis_anterior: { model: 'leg_anatomy', camera: 'anterior', annotationTerms: ['tibialis anterior'] },
-        fibularis: { model: 'leg_anatomy', camera: 'anterior', annotationTerms: ['fibularis', 'peroneus'] },
-        triceps_surae: { model: 'leg_muscles', camera: 'calf', annotationTerms: ['gastrocnemius', 'soleus', 'calf', 'triceps surae'] },
-        tibialis_posterior: { model: 'leg_anatomy', camera: 'posterior', annotationTerms: ['tibialis posterior'] },
-        fhl: { model: 'leg_anatomy', camera: 'posterior', annotationTerms: ['flexor hallucis', 'fhl'] },
+        anat_tibialis_ant: { uid: '7f8dc8275dec43d39e8c7da9347c32b7', name: 'Tibialis Anterior', credit: 'Anatomary', cameras: { default: { eye: [0, -0.3, 0.4], target: [0, -0.4, 0] } } },
+        anat_fibularis_longus: { uid: '3720783d7a1843fcb3efd00ef28ed4a6', name: 'Fibularis Longus', credit: 'Anatomary', cameras: { default: { eye: [0.3, -0.3, 0.3], target: [0, -0.4, 0] } } },
+        anat_gastrocnemius: { uid: '6e79f238b65e4490841d02fd30fd374c', name: 'Gastrocnemius', credit: 'Anatomary', cameras: { default: { eye: [-0.2, -0.3, 0.4], target: [0, -0.4, 0] } } },
+        anat_soleus: { uid: 'ffeff462a92f4415b3e1e05fbea7cc53', name: 'Soleus', credit: 'Anatomary', cameras: { default: { eye: [-0.2, -0.3, 0.4], target: [0, -0.4, 0] } } },
+        anat_tibialis_post: { uid: '7b5897cd7e9a4141b8a0d4486619f71b', name: 'Tibialis Posterior', credit: 'Anatomary', cameras: { default: { eye: [-0.2, -0.35, 0.3], target: [0, -0.4, 0] } } },
+        anat_fhl: { uid: '76dbb3349e8e4d6085977034d34301ad', name: 'Flexor Hallucis Longus', credit: 'Anatomary', cameras: { default: { eye: [-0.2, -0.35, 0.3], target: [0, -0.4, 0] } } }
+    };
+
+    // ============================================
+    // STRUCTURE → MODEL MAPPING (verified 1:1)
+    // Every structure maps to a model that SHOWS that structure
+    // ============================================
+    const STRUCTURE_MODEL_MAP = {
+        // === BACK (dedicated individual models) ===
+        lat: { model: 'anat_lat' },
+        trapezius: { model: 'anat_trapezius' },
+        rhomboids: { model: 'anat_rhomboid_major' },
+        serratus: { model: 'anat_serratus' },
+        levator: { model: 'anat_levator' },
         
-        // Foot
-        plantar_fascia: { model: 'leg_anatomy', camera: 'calf', annotationTerms: ['plantar fascia', 'plantar aponeurosis'] },
-        intrinsic_foot_1: { model: 'leg_anatomy', camera: 'calf', annotationTerms: ['abductor hallucis', 'flexor digitorum brevis'] },
-        intrinsic_foot_deep: { model: 'leg_anatomy', camera: 'calf', annotationTerms: ['lumbrical', 'interossei', 'adductor hallucis'] }
+        // === SHOULDER (dedicated individual models) ===
+        supraspinatus: { model: 'anat_supraspinatus' },
+        infraspinatus: { model: 'anat_infraspinatus' },
+        subscapularis: { model: 'anat_subscapularis' },
+        deltoid: { model: 'anat_deltoid' },
+        teres_minor: { model: 'anat_teres_minor' },
+        teres_major: { model: 'anat_teres_major' },
+        
+        // === ARM (dedicated individual models) ===
+        biceps: { model: 'anat_biceps' },
+        brachialis: { model: 'anat_brachialis' },
+        triceps: { model: 'anat_triceps' },
+        coracobrachialis: { model: 'anat_coracobrachialis' },
+        
+        // === FOREARM (dedicated individual models) ===
+        fdp: { model: 'anat_fdp' },
+        fds: { model: 'anat_fds' },
+        pronator_teres: { model: 'anat_pronator' },
+        fpl: { model: 'anat_fpl' },
+        brachioradialis: { model: 'anat_brachioradialis' },
+        extensors: { model: 'anat_ext_digitorum' },
+        
+        // === HAND (dedicated where available, composite for groups) ===
+        lumbricals: { model: 'anat_lumbricals' },
+        interossei: { model: 'anat_palmar_interossei' },
+        pulleys: { model: 'carpal_tunnel', camera: 'pulleys' },
+        thenar: { model: 'anat_opponens_pollicis' },
+        hypothenar: { model: 'anat_abd_digiti_minimi' },
+        
+        // === NERVES (composite models - no individual Anatomary models) ===
+        brachial_plexus: { model: 'brachial_plexus', camera: 'default' },
+        median_nerve: { model: 'carpal_tunnel', camera: 'default' },
+        ulnar_nerve: { model: 'hand_forearm', camera: 'hypothenar' },
+        radial_nerve: { model: 'shoulder_arm', camera: 'triceps' },
+        musculocutaneous: { model: 'shoulder_arm', camera: 'biceps' },
+        axillary_nerve: { model: 'shoulder_joint', camera: 'default' },
+        
+        // === ARTERIES (composite models) ===
+        axillary_artery: { model: 'shoulder_arm', camera: 'default' },
+        brachial_artery: { model: 'shoulder_arm', camera: 'biceps' },
+        radial_ulnar_arteries: { model: 'hand_forearm', camera: 'default' },
+        
+        // === HIP & GLUTEAL (dedicated individual models) ===
+        glute_max: { model: 'anat_glute_max' },
+        glute_med: { model: 'anat_glute_med' },
+        glute_min: { model: 'anat_glute_min' },
+        piriformis: { model: 'anat_piriformis' },
+        deep_rotators: { model: 'anat_obturator' },
+        iliopsoas: { model: 'anat_iliopsoas' },
+        
+        // === THIGH (dedicated individual models) ===
+        quadriceps: { model: 'anat_rectus_femoris' },
+        sartorius: { model: 'anat_sartorius' },
+        adductors: { model: 'anat_adductor_longus' },
+        hamstrings: { model: 'anat_biceps_femoris' },
+        
+        // === LEG & ANKLE (dedicated individual models) ===
+        tibialis_anterior: { model: 'anat_tibialis_ant' },
+        fibularis: { model: 'anat_fibularis_longus' },
+        triceps_surae: { model: 'anat_gastrocnemius' },
+        tibialis_posterior: { model: 'anat_tibialis_post' },
+        fhl: { model: 'anat_fhl' },
+        
+        // === FOOT (composite - no dedicated Anatomary models for plantar) ===
+        plantar_fascia: { model: 'leg_anatomy', camera: 'calf' },
+        intrinsic_foot_1: { model: 'leg_anatomy', camera: 'calf' },
+        intrinsic_foot_deep: { model: 'leg_anatomy', camera: 'calf' }
     };
 
     // 2D Image fallbacks
@@ -1786,52 +1861,19 @@
             const loading = document.getElementById(loadingId);
             loading.classList.remove('hidden');
 
+            const cameraKey = mapping.camera || 'default';
+
             const client = new Sketchfab(iframe);
             client.init(modelData.uid, {
                 success: (api) => {
                     api.start();
                     api.addEventListener('viewerready', () => {
-                        // Try to find and navigate to the annotation for this structure
-                        api.getAnnotationList((err, annotations) => {
-                            loading.classList.add('hidden');
-                            
-                            if (!err && annotations && annotations.length > 0) {
-                                // Get search terms for this structure
-                                const searchTerms = mapping.annotationTerms || [mapping.camera];
-                                
-                                // Find matching annotation by searching titles
-                                let matchedIndex = -1;
-                                for (let i = 0; i < annotations.length; i++) {
-                                    const title = (annotations[i].name || '').toLowerCase();
-                                    for (const term of searchTerms) {
-                                        if (title.includes(term.toLowerCase())) {
-                                            matchedIndex = i;
-                                            break;
-                                        }
-                                    }
-                                    if (matchedIndex >= 0) break;
-                                }
-                                
-                                if (matchedIndex >= 0) {
-                                    // Navigate to the matched annotation
-                                    api.gotoAnnotation(matchedIndex, {preventCameraAnimation: false}, (err, idx) => {
-                                        if (!err) console.log('Navigated to annotation:', annotations[matchedIndex].name);
-                                    });
-                                } else {
-                                    // Fallback to manual camera position if no annotation found
-                                    const cameraPos = modelData.cameras[mapping.camera] || modelData.cameras.default;
-                                    if (cameraPos) {
-                                        api.setCameraLookAt(cameraPos.eye, cameraPos.target, 1.5);
-                                    }
-                                }
-                            } else {
-                                // No annotations, use manual camera position
-                                const cameraPos = modelData.cameras[mapping.camera] || modelData.cameras.default;
-                                if (cameraPos) {
-                                    api.setCameraLookAt(cameraPos.eye, cameraPos.target, 1.5);
-                                }
-                            }
-                        });
+                        loading.classList.add('hidden');
+                        // Set camera position
+                        const cameraPos = modelData.cameras[cameraKey] || modelData.cameras.default;
+                        if (cameraPos) {
+                            api.setCameraLookAt(cameraPos.eye, cameraPos.target, 1.5);
+                        }
                     });
                 },
                 error: () => {
@@ -1842,7 +1884,7 @@
                 ui_infos: 0,
                 ui_stop: 0,
                 ui_watermark: 0,
-                ui_annotations: 1  // Enable annotations so we can navigate to them
+                ui_annotations: 0
             });
         },
 
